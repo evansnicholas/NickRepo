@@ -18,6 +18,11 @@ import org.w3c.dom.Element;
 public class XMLFileCreator {
 
 	ArrayList<ArrayList> rows = new ArrayList<ArrayList>();
+	String configFileLocation;
+	
+	XMLFileCreator(String configFileLocation){
+		this.configFileLocation = configFileLocation;
+	}
 	
 	public void makeXMLFile(){
 		try{
@@ -36,7 +41,7 @@ public class XMLFileCreator {
 				
 				ServiceConfiguration currentServiceConfiguration;
 				
-				System.out.println("Number of elements in row: "+row.size());
+				//System.out.println("Number of elements in row: "+row.size());
 				
 				String serviceName = row.get(1).toString();
 				String service = row.get(1).toString();
@@ -101,7 +106,7 @@ public class XMLFileCreator {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("C:\\Users\\iggo\\Desktop\\TestConfigFile.xml"));
+			StreamResult result = new StreamResult(new File(configFileLocation));
 				
 			transformer.transform(source, result);
 		
