@@ -29,6 +29,7 @@ public class XMLFileCreator {
 			
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document doc = docBuilder.newDocument();
+			doc.setXmlStandalone(true);
 			ServiceConfigurations sc = new ServiceConfigurations(doc);
 			
 			for (ArrayList row : rows){
