@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,6 +22,8 @@ public class XMLFileCreator {
 	public void makeXMLFile(){
 		try{
 			
+			Stack serviceConfigurationsStack = new Stack();
+			
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			docFactory.setNamespaceAware(true);
 			
@@ -30,10 +33,11 @@ public class XMLFileCreator {
 			
 			for (ArrayList row : rows){
 				
+				ServiceConfiguration currentServiceConfiguration;
+				
 				System.out.println("Number of elements in row: "+row.size());
 				
 				String serviceName = row.get(1).toString();
-				
 				String service = row.get(1).toString();
 				String isInternalHeader = row.get(2).toString();
 				String version = row.get(3).toString();
@@ -51,14 +55,25 @@ public class XMLFileCreator {
 				String Severity_WARNING = row.get(15).toString();
 				String WARNING_Details = row.get(16).toString();
 				
-				ServiceConfiguration serviceConfiguration = new ServiceConfiguration(service, version.toString(), doc, isInternalHeader);
+				if (service.equals("REPEATED_SERVICE")){
+					currentServiceConfiguration = (ServiceConfiguration) serviceConfigurationsStack.peek();
+				}
+				
+				else {
+					
+					serviceConfigurationsStack.push(new ServiceConfiguration(service, version.toString(), doc, isInternalHeader));
+					currentServiceConfiguration = (ServiceConfiguration) serviceConfigurationsStack.peek();	
+					sc.addServiceConfiguration(currentServiceConfiguration);
+					sc.addChildrenToRootElement();
+				}
+				/*ServiceConfiguration serviceConfiguration = new ServiceConfiguration(service, version.toString(), doc, isInternalHeader);
 				sc.addServiceConfiguration(serviceConfiguration);
-				sc.addChildrenToRootElement();
+				sc.addChildrenToRootElement();*/
 				
 				Logging logging = new Logging(doc, target);
-				serviceConfiguration.addLogging(logging);
+				currentServiceConfiguration.addLogging(logging);
 				
-				serviceConfiguration.addLoggingsToServiceConfiguration();
+				currentServiceConfiguration.addLoggingsToServiceConfiguration();
 				
 				Filter filterINFO = new Filter(doc, INFO_Details, "INFO", Severity_INFO);
 				logging.addFilter(filterINFO);
