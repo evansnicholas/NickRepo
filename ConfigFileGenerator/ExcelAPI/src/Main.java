@@ -75,12 +75,13 @@ public class Main {
 					xmlFileCreator.addRow(rowContent);
 					
 					
-				}
-					
+				}	
 				pkg.close();
+				
 				}catch(FileNotFoundException e){
-					System.out.println("One of paths you entered does not exist or one of the needed files is in use.  Please make sure the excel file and the config file are not in use by another program.");
-					System.exit(-1);
+					System.out.println(e.getMessage());
+					System.out.println("The config file has been generated.");
+					//System.exit(-1);
 				}
 				
 				//remove last 4 entries because we don't want them.
