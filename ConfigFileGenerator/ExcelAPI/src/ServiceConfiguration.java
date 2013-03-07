@@ -24,7 +24,6 @@ public class ServiceConfiguration {
 		
 		this.generateInternalHeader = doc.createElement("cfg:generateInternalHeader");
 		this.generateInternalHeader.appendChild(doc.createTextNode(generateInternalHeader));
-		this.serviceConfiguration.appendChild(this.generateInternalHeader);
 	}
 	
 
@@ -44,6 +43,11 @@ public class ServiceConfiguration {
 		}
 	}
 		
+	public void addGenerateInternalHeaderElement(){
+		
+		this.serviceConfiguration.appendChild(this.generateInternalHeader);
+		
+	}
 	
 
 	

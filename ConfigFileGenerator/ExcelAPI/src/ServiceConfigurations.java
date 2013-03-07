@@ -12,7 +12,7 @@ public class ServiceConfigurations {
 	
 	ServiceConfigurations(Document doc){
 		
-		this.rootElement = doc.createElementNS("http://www.ziggo.nl/Integration/ESB/Generic/Configuration/1.0", "cfg:serviceConfigurations");
+		this.rootElement = doc.createElementNS("http://www.ziggo.nl/Integration/ESB/Generic/Configuration/1.0", "cfg:ServiceConfigurations");
 		Attr schemaLocationAttribute = doc.createAttribute("xsi:schemaLocation");
 		schemaLocationAttribute.setValue("http://www.ziggo.nl/Integration/ESB/Generic/Configuration/1.0 serviceConfiguration.xsd");
 		Attr prefixAttribute = doc.createAttribute("xmlns:xsi");

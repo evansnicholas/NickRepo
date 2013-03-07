@@ -24,6 +24,8 @@ public class XMLFileCreator {
 		this.configFileLocation = configFileLocation;
 	}
 	
+	int currentRowIndex;
+	
 	public void makeXMLFile(){
 		try{
 			
@@ -37,7 +39,11 @@ public class XMLFileCreator {
 			doc.setXmlStandalone(true);
 			ServiceConfigurations sc = new ServiceConfigurations(doc);
 			
+			this.initializeCurrentRowIndex();
+			
 			for (ArrayList row : rows){
+				
+				
 				
 				ServiceConfiguration currentServiceConfiguration;
 				
@@ -67,6 +73,13 @@ public class XMLFileCreator {
 				
 				else {
 					
+					if (serviceConfigurationsStack.empty() == false || this.currentRowIndex == rows.size()){
+					//Add InternalHeaderElement to last serviceConfiguration before creating new one.
+					currentServiceConfiguration = (ServiceConfiguration) serviceConfigurationsStack.peek();
+					currentServiceConfiguration.addGenerateInternalHeaderElement();
+					}
+					
+					//Creat new ServiceConfigurationElement
 					serviceConfigurationsStack.push(new ServiceConfiguration(service, version.toString(), doc, isInternalHeader));
 					currentServiceConfiguration = (ServiceConfiguration) serviceConfigurationsStack.peek();	
 					sc.addServiceConfiguration(currentServiceConfiguration);
@@ -100,6 +113,13 @@ public class XMLFileCreator {
 				logging.addFilter(filterTRACE);
 				
 				logging.addFiltersToLogging();
+				
+				//if this is the last row then add InternalHeaderElement now
+				if(service.equals("REPEATED_SERVICE") && this.currentRowIndex == rows.size()){
+					currentServiceConfiguration.addGenerateInternalHeaderElement();
+				}
+				
+				this.incrementCurrentRowIndex();
 				
 			}	
 				
@@ -142,6 +162,11 @@ public class XMLFileCreator {
 		return rows;
 	}
 	
+	private int initializeCurrentRowIndex(){
+		return this.currentRowIndex = 1;
+	}
 	
-	
+	private void incrementCurrentRowIndex(){
+		this.currentRowIndex++;
+	}
 }
