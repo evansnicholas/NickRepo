@@ -101,15 +101,23 @@ public class ReadConfigFile {
 		
 	}
 	
-	public void printAServiceConfiguration(){
+	public void printAServiceConfiguration(int k){
 		
-		ArrayList<String> aServiceConfiguration = this.parsedServiceConfigurations.get(0);
+		ArrayList<String> aServiceConfiguration = this.parsedServiceConfigurations.get(k);
 		System.out.println("Length: "+this.parsedServiceConfigurations.get(0).size());
 		
 		for (int i=0; i < aServiceConfiguration.size(); i++){
 			System.out.print(aServiceConfiguration.get(i).toString()+", ");
 		}
 		
+		System.out.print("\n");
 	}
-
+	
+	public ArrayList getParsedServiceConfigurations(){
+		return this.parsedServiceConfigurations;
+	}
+	
+	public ArrayList getAllGenerateInternalHeaderValues(){
+		return this.allGenerateInternalHeaderValues;
+	}
 }

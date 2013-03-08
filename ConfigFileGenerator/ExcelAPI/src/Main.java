@@ -23,7 +23,11 @@ public class Main {
 		
 		ReadConfigFile readConfigFile = new ReadConfigFile();
 		readConfigFile.readInConfigFile();
-		readConfigFile.printAServiceConfiguration();
+		//readConfigFile.printAServiceConfiguration(0);
+		//readConfigFile.printAServiceConfiguration(1);
+		
+		ExcelFileWriter excelFileWriter = new ExcelFileWriter();
+		excelFileWriter.createExcelFile(readConfigFile.getParsedServiceConfigurations(), readConfigFile.getAllGenerateInternalHeaderValues(), "C:\\Users\\iggo\\Desktop\\TEST.xlsm");
 		
 		
 		/*try{
