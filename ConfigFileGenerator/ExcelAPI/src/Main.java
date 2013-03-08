@@ -21,7 +21,12 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		try{
+		ReadConfigFile readConfigFile = new ReadConfigFile();
+		readConfigFile.readInConfigFile();
+		readConfigFile.printAServiceConfiguration();
+		
+		
+		/*try{
 					
 				String excelFileLocation = args[0];
 				String configFileLocation = args[1];
@@ -101,7 +106,7 @@ public class Main {
 				else{
 					e.printStackTrace();
 				}
-			}
+			}*/
 	}
 
 }
