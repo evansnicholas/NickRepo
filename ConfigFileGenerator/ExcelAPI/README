@@ -1,0 +1,12 @@
+#############################################
+ConfigFileGenerator README                  #
+											#
+Version 1									#
+											#
+#############################################
+
+Enter the name of your service and the logging configuration in the SeverityConfigurationFile.xlsm file.
+Then press the "GenerateConfigFile" button in the first sheet to generate the config file.
+
+By setting the variables Excel_File_Location and Config_File_Location in GenerateConfigFile.bat you can specify the
+location of the Excel file as well as the location and name of the config file that will be generated.								

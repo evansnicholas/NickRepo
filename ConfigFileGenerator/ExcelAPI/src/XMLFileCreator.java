@@ -1,10 +1,12 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -123,13 +125,20 @@ public class XMLFileCreator {
 				
 			}	
 				
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(configFileLocation));
-				
-			transformer.transform(source, result);
+			
+			try{
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(new File(configFileLocation));
+					
+				transformer.transform(source, result);
 		
+			}catch(TransformerException e){
+			System.out.println("\n"+"The path to the config file is not correct.  Please check this path in the GenerateConfigFile.bat file.");
+			System.exit(-1);
+			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}

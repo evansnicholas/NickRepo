@@ -76,12 +76,12 @@ public class Main {
 					
 					
 				}	
-				pkg.close();
+				//pkg.close();
 				
-				}catch(FileNotFoundException e){
-					System.out.println(e.getMessage());
-					System.out.println("The config file has been generated.");
-					//System.exit(-1);
+				}catch(IllegalStateException e){
+					//System.out.println(e.getMessage());
+					System.out.println("\n"+"An error occured with one of the files.  Check the path to the Excel file and the config file set in GenerateConfigFile.bat.");
+					System.exit(-1);
 				}
 				
 				//remove last 4 entries because we don't want them.
@@ -90,13 +90,13 @@ public class Main {
 				//xmlFileCreator.printSizeOfRows();
 				xmlFileCreator.makeXMLFile();
 				
-				System.out.println("The config file has been generated. It can be found at: "+configFileLocation);
+				System.out.println("\n"+"The config file has been generated. It can be found at: "+configFileLocation);
 				
 				
 			}catch(Exception e){	
 				if (args.length < 2){
 					
-					System.out.print("You have not entered valid parameters. First parameter: Excel file location. Second parameter: Config file location.");
+					System.out.println("\n"+"You have not entered valid parameters. First parameter: Excel file location. Second parameter: Config file location.");
 				}
 				else{
 					e.printStackTrace();
