@@ -39,16 +39,17 @@ public class ExcelFileWriter {
 			    String severity_TRACE = "";
 			    String trace_Details = "";
 				
-				boolean addGenerateInternalHeader = true;
+				boolean addGenerateInternalHeaderAndServiceName = true;
+				
 				ArrayList<String> currentServiceConfiguration = (ArrayList<String>) configFileContent.get(i-1);
 				
 				if (i==1){
 				  currentServiceName = currentServiceConfiguration.get(0).toString();
 				}else if(currentServiceConfiguration.get(0).toString().equals(currentServiceName)){
-					addGenerateInternalHeader = false;
+					addGenerateInternalHeaderAndServiceName = false;
 				}else{
 					currentServiceName=currentServiceConfiguration.get(0).toString();
-					addGenerateInternalHeader = true;
+					addGenerateInternalHeaderAndServiceName = true;
 					distinctServiceConfigurationCount++;
 				}
 				
@@ -97,13 +98,23 @@ public class ExcelFileWriter {
 				Row referenceRow = configInfoSheet.getRow(0);
 				Row row = configInfoSheet.createRow(i);
 				
-				Cell serviceNameCell = row.createCell(1);
-				serviceNameCell.setCellValue(serviceName);
+				//Component cell is created but not filled.
+				Cell componentName = row.createCell(0);
+				componentName.setCellType(3);
 				
-				if (addGenerateInternalHeader == true){
+				if (addGenerateInternalHeaderAndServiceName == true){
 					String isInternalHeader = generateInternalHeaderValues.get(distinctServiceConfigurationCount).toString();
 					Cell generateInternalHeaderCell = row.createCell(2);
 					generateInternalHeaderCell.setCellValue(Boolean.valueOf(isInternalHeader));
+					Cell serviceNameCell = row.createCell(1);
+					serviceNameCell.setCellValue(serviceName);
+					
+				}else{
+					Cell generateInternalHeaderCell = row.createCell(2);
+					generateInternalHeaderCell.setCellType(3);
+					Cell serviceNameCell = row.createCell(1);
+					serviceNameCell.setCellType(3);
+					
 				}
 				
 				Cell serviceVersionCell = row.createCell(3);

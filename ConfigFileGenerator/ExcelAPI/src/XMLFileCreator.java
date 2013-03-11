@@ -40,15 +40,6 @@ public class XMLFileCreator {
 			
 			for (ArrayList<String> row : rows){
 				
-				System.out.println("Row size: "+row.size());
-				
-				for (int i = 0; i < row.size(); i++){
-					
-					System.out.print(" "+row.get(i).toString());
-				}
-				
-				System.out.println("");
-				
 				ServiceConfiguration currentServiceConfiguration;
 				
 				//System.out.println("Number of elements in row: "+row.size());
@@ -71,18 +62,19 @@ public class XMLFileCreator {
 				String WARNING_Details = row.get(16).toString();
 				
 				if (service.equals("REPEATED_SERVICE")){
-					currentServiceConfiguration = (ServiceConfiguration) serviceConfigurationsStack.peek();
-				}
-				
-				else {
 					
-					if (serviceConfigurationsStack.empty() == false || this.currentRowIndex == rows.size()){
+					currentServiceConfiguration = (ServiceConfiguration) serviceConfigurationsStack.peek();
+					
+				}else {
+					
+					
+					if (serviceConfigurationsStack.empty() == false){
 					//Add InternalHeaderElement to last serviceConfiguration before creating new one.
 					currentServiceConfiguration = (ServiceConfiguration) serviceConfigurationsStack.peek();
 					currentServiceConfiguration.addGenerateInternalHeaderElement();
 					}
 					
-					//Creat new ServiceConfigurationElement
+					//Create new ServiceConfigurationElement
 					serviceConfigurationsStack.push(new ServiceConfiguration(service, version.toString(), doc, isInternalHeader));
 					currentServiceConfiguration = (ServiceConfiguration) serviceConfigurationsStack.peek();	
 					sc.addServiceConfiguration(currentServiceConfiguration);
@@ -118,7 +110,7 @@ public class XMLFileCreator {
 				logging.addFiltersToLogging();
 				
 				//if this is the last row then add InternalHeaderElement now
-				if(service.equals("REPEATED_SERVICE") && this.currentRowIndex == rows.size()){
+				if(this.currentRowIndex == rows.size()){
 					currentServiceConfiguration.addGenerateInternalHeaderElement();
 				}
 				

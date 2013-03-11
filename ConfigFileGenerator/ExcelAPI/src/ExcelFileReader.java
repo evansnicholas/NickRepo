@@ -27,9 +27,6 @@ public class ExcelFileReader {
 				ArrayList<String> rowContent = new ArrayList<String>();
 				//Row firstRow = sheet1.getRow(1);
 			
-			Cell testCell = row.getCell(2);
-			System.out.println("Cell 2 type: "+testCell.getCellType());
-			
 				for (Cell cell : row){
 				
 					int cellType = cell.getCellType();
@@ -43,7 +40,7 @@ public class ExcelFileReader {
 						Boolean cellValueBoolean = (Boolean) cell.getBooleanCellValue();
 						String cellValueBooleanInString = cellValueBoolean.toString();
 						rowContent.add(cellValueBooleanInString);
-						System.out.println("Cell content is :"+cellValueBooleanInString);	
+		
 					}
 					else if (cellType == 0){
 						int cellValueInt = (int) cell.getNumericCellValue();
