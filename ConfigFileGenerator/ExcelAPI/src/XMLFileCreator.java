@@ -1,8 +1,6 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Stack;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -10,16 +8,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.dom4j.Attribute;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
 
 
 public class XMLFileCreator {
 
-	ArrayList<ArrayList> rows = new ArrayList<ArrayList>();
+	ArrayList<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
 	String configFileLocation;
 	
 	XMLFileCreator(String configFileLocation){
@@ -31,7 +26,7 @@ public class XMLFileCreator {
 	public void makeXMLFile(){
 		try{
 			
-			Stack serviceConfigurationsStack = new Stack();
+			Stack<ServiceConfiguration> serviceConfigurationsStack = new Stack<ServiceConfiguration>();
 			
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			docFactory.setNamespaceAware(true);
@@ -43,15 +38,21 @@ public class XMLFileCreator {
 			
 			this.initializeCurrentRowIndex();
 			
-			for (ArrayList row : rows){
+			for (ArrayList<String> row : rows){
 				
+				System.out.println("Row size: "+row.size());
 				
+				for (int i = 0; i < row.size(); i++){
+					
+					System.out.print(" "+row.get(i).toString());
+				}
+				
+				System.out.println("");
 				
 				ServiceConfiguration currentServiceConfiguration;
 				
 				//System.out.println("Number of elements in row: "+row.size());
 				
-				String serviceName = row.get(1).toString();
 				String service = row.get(1).toString();
 				String isInternalHeader = row.get(2).toString();
 				String version = row.get(3).toString();
@@ -144,7 +145,7 @@ public class XMLFileCreator {
 		}
 	}
 	
-	public void addRow(ArrayList rowContent){
+	public void addRow(ArrayList<String> rowContent){
 		
 		rows.add(rowContent);
 		
@@ -167,7 +168,7 @@ public class XMLFileCreator {
 		rows.remove(0);
 	}
 	
-	public ArrayList getRows(){
+	public ArrayList<ArrayList<String>> getRows(){
 		return rows;
 	}
 	

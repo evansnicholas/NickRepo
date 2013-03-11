@@ -9,14 +9,14 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class ReadConfigFile {
 
-	ArrayList<ArrayList> parsedServiceConfigurations = new ArrayList<ArrayList>();
+	ArrayList<ArrayList<String>> parsedServiceConfigurations = new ArrayList<ArrayList<String>>();
 	ArrayList<String> currentServiceConfigurationValues = new ArrayList<String>();
 	String currentServiceConfigurationName;
 	String currentServiceConfigurationVersion;
 	boolean isGenerateInternalHeader;
 	ArrayList<String> allGenerateInternalHeaderValues = new ArrayList<String>();
 	
-	public void readInConfigFile() {
+	public void readInConfigFile(String configFileLocation) {
 		// TODO Auto-generated method stub
 		
 		try{
@@ -25,11 +25,7 @@ public class ReadConfigFile {
 			SAXParser saxParser = factory.newSAXParser();
 			
 			DefaultHandler handler = new DefaultHandler() {
-				
-				boolean isServiceConfiguration;
-				
-				
-				
+							
 				public void startElement(String uri, String localName,String qName, 
 		                Attributes attributes) throws SAXException {
 					
@@ -93,7 +89,7 @@ public class ReadConfigFile {
 				
 			};
 			
-			saxParser.parse("C:\\users\\iggo\\desktop\\TestXMLFile.xml", handler);
+			saxParser.parse(configFileLocation, handler);
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -113,11 +109,11 @@ public class ReadConfigFile {
 		System.out.print("\n");
 	}
 	
-	public ArrayList getParsedServiceConfigurations(){
+	public ArrayList<ArrayList<String>> getParsedServiceConfigurations(){
 		return this.parsedServiceConfigurations;
 	}
 	
-	public ArrayList getAllGenerateInternalHeaderValues(){
+	public ArrayList<String> getAllGenerateInternalHeaderValues(){
 		return this.allGenerateInternalHeaderValues;
 	}
 }
