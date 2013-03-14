@@ -100,7 +100,8 @@ public class ExcelFileWriter {
 				
 				//Component cell is created but not filled.
 				Cell componentName = row.createCell(0);
-				componentName.setCellType(3);
+				//componentName.setCellType(3);
+				componentName.setCellValue("");
 				
 				if (addGenerateInternalHeaderAndServiceName == true){
 					String isInternalHeader = generateInternalHeaderValues.get(distinctServiceConfigurationCount).toString();
@@ -111,10 +112,11 @@ public class ExcelFileWriter {
 					
 				}else{
 					Cell generateInternalHeaderCell = row.createCell(2);
-					generateInternalHeaderCell.setCellType(3);
+					//generateInternalHeaderCell.setCellType(3);
+					generateInternalHeaderCell.setCellValue("");
 					Cell serviceNameCell = row.createCell(1);
-					serviceNameCell.setCellType(3);
-					
+					//serviceNameCell.setCellType(3);
+					serviceNameCell.setCellValue("");
 				}
 				
 				Cell serviceVersionCell = row.createCell(3);

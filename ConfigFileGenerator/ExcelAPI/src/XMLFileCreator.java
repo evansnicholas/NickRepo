@@ -44,22 +44,75 @@ public class XMLFileCreator {
 				
 				//System.out.println("Number of elements in row: "+row.size());
 				
-				String service = row.get(1).toString();
-				String isInternalHeader = row.get(2).toString();
-				String version = row.get(3).toString();
-				String target = row.get(4).toString();
-				String Severity_INFO = row.get(5).toString();
-				String INFO_Details = row.get(6).toString();
-				String Severity_DEBUG = row.get(7).toString();
-				String DEBUG_Details = row.get(8).toString();
-				String Severity_ERROR = row.get(9).toString();
-				String ERROR_Details = row.get(10).toString();
-				String Severity_FATAL = row.get(11).toString();
-				String FATAL_Details = row.get(12).toString();
-				String Severity_TRACE = row.get(13).toString();
-				String TRACE_Details = row.get(14).toString();
-				String Severity_WARNING = row.get(15).toString();
-				String WARNING_Details = row.get(16).toString();
+				/*for (int i = 0; i<row.size(); i++){
+					System.out.print("#"+i+": "+row.get(i).toString()+" ");
+				}*/
+				
+				String service = "";
+				String isInternalHeader = "";
+				String version = "";
+				String target = "";
+				String severity_INFO = "";
+				String info_Details = "";
+				String severity_DEBUG = "";
+				String debug_Details = "";
+				String severity_ERROR = "";
+				String error_Details = "";
+				String severity_FATAL = "";
+				String fatal_Details = "";
+				String severity_TRACE = "";
+				String trace_Details = "";
+				String severity_WARNING = "";
+				String warning_Details = "";
+				
+				for (int j = 0; j < row.size(); j++){
+					
+					if (row.get(j).toString().equals("INFO_Details")){
+						
+						severity_INFO = row.get(j-3).toString();
+						info_Details = row.get(j-1).toString();
+						
+					}else if (row.get(j).toString().equals("DEBUG_Details")){
+						
+						severity_DEBUG = row.get(j-3).toString();
+						debug_Details = row.get(j-1).toString();
+						
+					}else if (row.get(j).toString().equals("ERROR_Details")){
+						
+						severity_ERROR = row.get(j-3).toString();
+						error_Details = row.get(j-1).toString();
+												
+					}else if (row.get(j).toString().equals("FATAL_Details")){
+						
+						severity_FATAL = row.get(j-3).toString();
+						fatal_Details = row.get(j-1).toString();
+						
+					}else if (row.get(j).toString().equals("TRACE_Details")){
+						
+						severity_TRACE = row.get(j-3).toString();
+						trace_Details = row.get(j-1).toString();
+						
+					}else if (row.get(j).toString().equals("WARNING_Details")){
+						
+						severity_WARNING = row.get(j-3).toString();
+						warning_Details = row.get(j-1).toString();
+						
+					}else if (row.get(j).toString().equals("Service")){
+						service = row.get(j-1);
+						
+					}else if (row.get(j).toString().equals("generateInternalHeader")){
+						isInternalHeader = row.get(j-1).toString();
+						
+					}else if (row.get(j).toString().equals("version")){
+						version = row.get(j-1).toString();
+						
+					}else if (row.get(j).toString().equals("target")){
+						target = row.get(j-1).toString();
+						
+					}
+			
+				}
+				
 				
 				if (service.equals("REPEATED_SERVICE")){
 					
@@ -89,22 +142,22 @@ public class XMLFileCreator {
 				
 				currentServiceConfiguration.addLoggingsToServiceConfiguration();
 				
-				Filter filterINFO = new Filter(doc, INFO_Details, "INFO", Severity_INFO);
+				Filter filterINFO = new Filter(doc, info_Details, "INFO", severity_INFO);
 				logging.addFilter(filterINFO);
 				
-				Filter filterDEBUG = new Filter(doc, DEBUG_Details, "DEBUG", Severity_DEBUG);
+				Filter filterDEBUG = new Filter(doc, debug_Details, "DEBUG", severity_DEBUG);
 				logging.addFilter(filterDEBUG);
 				
-				Filter filterFATAL = new Filter(doc, FATAL_Details, "FATAL", Severity_FATAL);
+				Filter filterFATAL = new Filter(doc, fatal_Details, "FATAL", severity_FATAL);
 				logging.addFilter(filterFATAL);
 				
-				Filter filterERROR = new Filter(doc, ERROR_Details, "ERROR", Severity_ERROR);
+				Filter filterERROR = new Filter(doc, error_Details, "ERROR", severity_ERROR);
 				logging.addFilter(filterERROR);
 				
-				Filter filterWARNING = new Filter(doc, WARNING_Details, "WARNING", Severity_WARNING);
+				Filter filterWARNING = new Filter(doc, warning_Details, "WARNING", severity_WARNING);
 				logging.addFilter(filterWARNING);
 				
-				Filter filterTRACE = new Filter(doc,TRACE_Details, "TRACE", Severity_TRACE);
+				Filter filterTRACE = new Filter(doc, trace_Details, "TRACE", severity_TRACE);
 				logging.addFilter(filterTRACE);
 				
 				logging.addFiltersToLogging();

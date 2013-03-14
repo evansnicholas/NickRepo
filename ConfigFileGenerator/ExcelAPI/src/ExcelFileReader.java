@@ -14,51 +14,78 @@ public class ExcelFileReader {
 	public void createXMLFileFromExcelFile(String excelFileLocation, String configFileLocation){
 	
 		XMLFileCreator xmlFileCreator = new XMLFileCreator(configFileLocation);
+	    
+		Row currentRow;
+		Cell currentCell; 
 		
 		try{
 			OPCPackage pkg = OPCPackage.open(new File(excelFileLocation));
 			XSSFWorkbook wb = new XSSFWorkbook(pkg);
 			
 			Sheet sheet1 = wb.getSheetAt(1);
+			int numberOfRows = sheet1.getLastRowNum();
+			System.out.println("last row number is: "+numberOfRows);
 			
-			
-			for (Row row : sheet1){ 
+			for (int currentRowNumber = 0; currentRowNumber <= numberOfRows; currentRowNumber++){ 
 			
 				ArrayList<String> rowContent = new ArrayList<String>();
 				//Row firstRow = sheet1.getRow(1);
-			
-				for (Cell cell : row){
+			    
+				currentRow = sheet1.getRow(currentRowNumber);
+				int numberOfCellsInRow = currentRow.getLastCellNum();
 				
-					int cellType = cell.getCellType();
+				for (int currentCellNumber = 0; currentCellNumber < numberOfCellsInRow ; currentCellNumber++){	
+								
+					currentCell = currentRow.getCell(currentCellNumber);
 				
-					if (cellType == 1){
-						String cellContent = cell.getRichStringCellValue().getString();
+					int cellType = currentCell.getCellType();
+				
+					if (cellType == 1 && !currentCell.getStringCellValue().equals("")){
+						String cellContent = currentCell.getRichStringCellValue().getString();
 						rowContent.add(cellContent);
+						int cellNumber = currentCell.getColumnIndex();
+						String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+						rowContent.add(cellName);
 						//System.out.println(cellContent);
 					}
 					else if (cellType == 4){
-						Boolean cellValueBoolean = (Boolean) cell.getBooleanCellValue();
+						Boolean cellValueBoolean = (Boolean) currentCell.getBooleanCellValue();
 						String cellValueBooleanInString = cellValueBoolean.toString();
 						rowContent.add(cellValueBooleanInString);
+						int cellNumber = currentCell.getColumnIndex();
+						String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+						rowContent.add(cellName);
 		
 					}
 					else if (cellType == 0){
-						int cellValueInt = (int) cell.getNumericCellValue();
+						int cellValueInt = (int) currentCell.getNumericCellValue();
 						Integer cellValueIntInInteger = (Integer) cellValueInt;
 						String cellValueIntegerInString = cellValueIntInInteger.toString();
 						rowContent.add(cellValueIntegerInString);
+						int cellNumber = currentCell.getColumnIndex();
+						String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+						rowContent.add(cellName);
 						//System.out.println(cellValueIntegerInString);
 					}
-					else if (cellType == 3){
+					else if (cellType == 3 || currentCell.getStringCellValue().equals("")){
 						
 						rowContent.add("REPEATED_SERVICE");
+						int cellNumber = currentCell.getColumnIndex();
+						String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+						rowContent.add(cellName);
 						
 					}
-				};
+				}
+				
+				for (int i = 0; i<rowContent.size(); i++){
+					System.out.print("Row#"+currentRowNumber+" Cell#"+i+":"+rowContent.get(i).toString()+" ");
+				}
+				
+				System.out.println("");
 				
 				xmlFileCreator.addRow(rowContent);
 				
-			};	
+			}	
 				
 			}catch(IllegalStateException e){
 				//System.out.println(e.getMessage());
