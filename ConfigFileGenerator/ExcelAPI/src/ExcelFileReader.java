@@ -26,6 +26,12 @@ public class ExcelFileReader {
 			int numberOfRows = sheet1.getLastRowNum();
 			System.out.println("last row number is: "+numberOfRows);
 			
+			//TEST
+			//int numberOfPhysicalRows = sheet1.get();
+			//Cell testCell = testRow.getCell(0);
+			//int numberOfCells = testRow.getPhysicalNumberOfCells();
+			//System.out.println("Number of rows is: "+numberOfRows);
+			
 			for (int currentRowNumber = 0; currentRowNumber <= numberOfRows; currentRowNumber++){ 
 			
 				ArrayList<String> rowContent = new ArrayList<String>();
@@ -41,6 +47,7 @@ public class ExcelFileReader {
 					int cellType = currentCell.getCellType();
 				
 					if (cellType == 1 && !currentCell.getStringCellValue().equals("")){
+						
 						String cellContent = currentCell.getRichStringCellValue().getString();
 						rowContent.add(cellContent);
 						int cellNumber = currentCell.getColumnIndex();

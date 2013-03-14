@@ -204,11 +204,11 @@ public class XMLFileCreator {
 	
 	public void removeLast4ElementsFromRowsAndFirstRow(){
 		
-		int rowsInitialSize = rows.size();
+		/*int rowsInitialSize = rows.size();
 		
 		for (int i=1; i<5; i++){
 			rows.remove(rowsInitialSize-i);
-		}
+		}*/
 		
 		rows.remove(0);
 	}
