@@ -24,8 +24,10 @@ public class ExcelFileReader {
 			
 			Sheet sheet1 = wb.getSheetAt(1);
 			int numberOfRows = sheet1.getLastRowNum();
-			System.out.println("last row number is: "+numberOfRows);
 			
+			if (Main.isDebug == true){
+			System.out.println("last row number is: "+numberOfRows);
+			}
 			//TEST
 			//int numberOfPhysicalRows = sheet1.get();
 			//Cell testCell = testRow.getCell(0);
@@ -42,53 +44,65 @@ public class ExcelFileReader {
 				
 				for (int currentCellNumber = 0; currentCellNumber < numberOfCellsInRow ; currentCellNumber++){	
 								
-					currentCell = currentRow.getCell(currentCellNumber);
-				
-					int cellType = currentCell.getCellType();
-				
-					if (cellType == 1 && !currentCell.getStringCellValue().equals("")){
+					try{
+					
+						currentCell = currentRow.getCell(currentCellNumber);
+					
+						int cellType = currentCell.getCellType();
+					
+						if (cellType == 1 && !currentCell.getStringCellValue().equals("")){
+							
+							String cellContent = currentCell.getRichStringCellValue().getString();
+							rowContent.add(cellContent);
+							int cellNumber = currentCell.getColumnIndex();
+							String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+							rowContent.add(cellName);
+							//System.out.println(cellContent);
+						}
+						else if (cellType == 4){
+							Boolean cellValueBoolean = (Boolean) currentCell.getBooleanCellValue();
+							String cellValueBooleanInString = cellValueBoolean.toString();
+							rowContent.add(cellValueBooleanInString);
+							int cellNumber = currentCell.getColumnIndex();
+							String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+							rowContent.add(cellName);
+			
+						}
+						else if (cellType == 0){
+							int cellValueInt = (int) currentCell.getNumericCellValue();
+							Integer cellValueIntInInteger = (Integer) cellValueInt;
+							String cellValueIntegerInString = cellValueIntInInteger.toString();
+							rowContent.add(cellValueIntegerInString);
+							int cellNumber = currentCell.getColumnIndex();
+							String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+							rowContent.add(cellName);
+							//System.out.println(cellValueIntegerInString);
+						}
+						else if (cellType == 3 || currentCell.getStringCellValue().equals("")){
+							
+							rowContent.add("REPEATED_SERVICE");
+							int cellNumber = currentCell.getColumnIndex();
+							String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+							rowContent.add(cellName);
+							
+						}
 						
-						String cellContent = currentCell.getRichStringCellValue().getString();
-						rowContent.add(cellContent);
-						int cellNumber = currentCell.getColumnIndex();
-						String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
-						rowContent.add(cellName);
-						//System.out.println(cellContent);
-					}
-					else if (cellType == 4){
-						Boolean cellValueBoolean = (Boolean) currentCell.getBooleanCellValue();
-						String cellValueBooleanInString = cellValueBoolean.toString();
-						rowContent.add(cellValueBooleanInString);
-						int cellNumber = currentCell.getColumnIndex();
-						String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
-						rowContent.add(cellName);
-		
-					}
-					else if (cellType == 0){
-						int cellValueInt = (int) currentCell.getNumericCellValue();
-						Integer cellValueIntInInteger = (Integer) cellValueInt;
-						String cellValueIntegerInString = cellValueIntInInteger.toString();
-						rowContent.add(cellValueIntegerInString);
-						int cellNumber = currentCell.getColumnIndex();
-						String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
-						rowContent.add(cellName);
-						//System.out.println(cellValueIntegerInString);
-					}
-					else if (cellType == 3 || currentCell.getStringCellValue().equals("")){
-						
-						rowContent.add("REPEATED_SERVICE");
-						int cellNumber = currentCell.getColumnIndex();
-						String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
-						rowContent.add(cellName);
-						
+					}catch(NullPointerException nullPointerException){
+				    	
+						System.out.println("The Excel file is not well formed.  Cell number "+currentCellNumber+" at row "+currentRowNumber+" does not exist.");
+						System.exit(-1);
 					}
 				}
 				
-				for (int i = 0; i<rowContent.size(); i++){
-					System.out.print("Row#"+currentRowNumber+" Cell#"+i+":"+rowContent.get(i).toString()+" ");
+				if (Main.isDebug == true){
+					for (int i = 0; i<rowContent.size(); i++){
+						System.out.print("Row#"+currentRowNumber+" Cell#"+i+":"+rowContent.get(i).toString()+" ");
+					}
 				}
 				
-				System.out.println("");
+				if (Main.isDebug == true){
+					System.out.println("");
+				}
 				
 				xmlFileCreator.addRow(rowContent);
 				
@@ -104,8 +118,8 @@ public class ExcelFileReader {
 			}
 		
 		//System.out.println("Number of elements in rows :"+xmlFileCreator.getRows().size());
-		//remove last 4 entries because we don't want them.
-		xmlFileCreator.removeLast4ElementsFromRowsAndFirstRow();
+		//remove first row.
+		xmlFileCreator.removeFirstRow();
 		//xmlFileCreator.printSizeOfRows();
 		xmlFileCreator.makeXMLFile();
 	

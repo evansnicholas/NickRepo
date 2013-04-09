@@ -202,7 +202,7 @@ public class XMLFileCreator {
 		
 	}
 	
-	public void removeLast4ElementsFromRowsAndFirstRow(){
+	public void removeFirstRow(){
 		
 		/*int rowsInitialSize = rows.size();
 		

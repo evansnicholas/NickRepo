@@ -4,6 +4,9 @@ public class Main {
 	/**
 	 * @param args
 	 */
+	
+	public static Boolean isDebug = false;
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
@@ -14,10 +17,29 @@ public class Main {
 				String excelFileLocation = args[1];
 				String configFileLocation = args[2];
 				
-				ExcelFileReader excelFileReader = new ExcelFileReader();
-				excelFileReader.createXMLFileFromExcelFile(excelFileLocation, configFileLocation);
 				
-				System.out.println("\n"+"The config file has been generated. It can be found at: "+configFileLocation);
+				//turn on debug.
+				
+				if (args.length == 4){
+					if (args[3].equalsIgnoreCase("debug")){
+						isDebug = true;
+					}
+				}
+				
+				try{
+				
+					ExcelFileReader excelFileReader = new ExcelFileReader();
+					excelFileReader.createXMLFileFromExcelFile(excelFileLocation, configFileLocation);
+					
+					System.out.println("\n"+"The config file has been generated. It can be found at: "+configFileLocation);
+					
+				}catch(Exception e){
+					
+					System.out.println("An exception occured.");
+					System.out.println(e.getStackTrace());
+					System.exit(-1);
+					
+				}
 				
 			}else if (args[0].equals("xmlToExcel")){
 			
