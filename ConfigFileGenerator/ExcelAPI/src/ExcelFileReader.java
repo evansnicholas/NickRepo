@@ -83,14 +83,26 @@ public class ExcelFileReader {
 									}
 									else if (cellType == 3 || currentCell.getStringCellValue().equals("")){
 										
+										String currentColumnName = sheet1.getRow(0).getCell(currentCellNumber).getStringCellValue();
+										
 										//Check that empty cell is not one that should be filled.
+										if (currentColumnName.equals("version")
+											|| currentColumnName.equals("target")){
+											
+											System.out.println("The Excel file is malformed.  Contents of "+currentColumnName+" in row "+currentRowNumber+" cannot be blank.");
+											System.exit(-1);
+										}
 										
-										
-										
-										rowContent.add("REPEATED_SERVICE");
-										int cellNumber = currentCell.getColumnIndex();
-										String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
-										rowContent.add(cellName);
+										if (currentColumnName.equals("Service")){
+											
+											rowContent.add("REPEATED_SERVICE");
+											int cellNumber = currentCell.getColumnIndex();
+											String cellName = sheet1.getRow(0).getCell(cellNumber).getRichStringCellValue().getString();
+											rowContent.add(cellName);
+											
+										}else{
+											continue;
+										}
 										
 									}
 									

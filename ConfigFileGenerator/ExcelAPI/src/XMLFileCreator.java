@@ -69,32 +69,50 @@ public class XMLFileCreator {
 					
 					if (row.get(j).toString().equals("INFO_Details")){
 						
-						severity_INFO = row.get(j-3).toString();
+						if (row.get(j-2).toString().equals("Severity_INFO")){
+							severity_INFO = row.get(j-3).toString();
+						}
+						
 						info_Details = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("DEBUG_Details")){
 						
-						severity_DEBUG = row.get(j-3).toString();
+						if(row.get(j-2).toString().equals("Severity_DEBUG")){
+							severity_DEBUG = row.get(j-3).toString();
+						}
+						
 						debug_Details = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("ERROR_Details")){
 						
-						severity_ERROR = row.get(j-3).toString();
+						if (row.get(j-2).toString().equals("Severity_ERROR")){
+							severity_ERROR = row.get(j-3).toString();
+						}
+						
 						error_Details = row.get(j-1).toString();
 												
 					}else if (row.get(j).toString().equals("FATAL_Details")){
 						
-						severity_FATAL = row.get(j-3).toString();
+						if (row.get(j-2).toString().equals("Severity_FATAL")){
+							severity_FATAL = row.get(j-3).toString();
+						}
+						
 						fatal_Details = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("TRACE_Details")){
 						
-						severity_TRACE = row.get(j-3).toString();
+						if (row.get(j-2).toString().equals("Severity_TRACE")){
+							severity_TRACE = row.get(j-3).toString();
+						}
+						
 						trace_Details = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("WARNING_Details")){
 						
-						severity_WARNING = row.get(j-3).toString();
+						if (row.get(j-2).toString().equals("Severity_WARNING")){
+							severity_WARNING = row.get(j-3).toString();
+						}
+						
 						warning_Details = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("Service")){
@@ -142,23 +160,62 @@ public class XMLFileCreator {
 				
 				currentServiceConfiguration.addLoggingsToServiceConfiguration();
 				
-				Filter filterINFO = new Filter(doc, info_Details, "INFO", severity_INFO);
-				logging.addFilter(filterINFO);
 				
-				Filter filterDEBUG = new Filter(doc, debug_Details, "DEBUG", severity_DEBUG);
-				logging.addFilter(filterDEBUG);
+				if (!info_Details.equals("") && !severity_INFO.equals("")){
+					Filter filterINFO = new Filter(doc, info_Details, "INFO", severity_INFO);
+					logging.addFilter(filterINFO);
+				}else if (info_Details.equals("") && severity_INFO.equals("")){
+					//do nothing.
+				}else{
+					System.out.println("The excel file is misformed.  Some INFO info is missing.");
+				}
+					
+				if (!debug_Details.equals("") && !severity_DEBUG.equals("")){
+					Filter filterDEBUG = new Filter(doc, debug_Details, "DEBUG", severity_DEBUG);
+					logging.addFilter(filterDEBUG);
+				}else if(debug_Details.equals("") && severity_DEBUG.equals("")){
+					//do nothing.
+				}else{
+					System.out.println("The excel file is misformed.  Some DEBUG info is missing.");
+				}
 				
-				Filter filterFATAL = new Filter(doc, fatal_Details, "FATAL", severity_FATAL);
-				logging.addFilter(filterFATAL);
+				if (!fatal_Details.equals("") && !severity_FATAL.equals("")){	
+					Filter filterFATAL = new Filter(doc, fatal_Details, "FATAL", severity_FATAL);
+					logging.addFilter(filterFATAL);
+				}else if(fatal_Details.equals("") && severity_FATAL.equals("")){
+					//do nothing.
 				
-				Filter filterERROR = new Filter(doc, error_Details, "ERROR", severity_ERROR);
-				logging.addFilter(filterERROR);
+				}else{
+					System.out.println("The excel file is misformed.  Some FATAL info is missing.");
+				}
+					
+				if (!error_Details.equals("") && !severity_ERROR.equals("")){
+					Filter filterERROR = new Filter(doc, error_Details, "ERROR", severity_ERROR);
+					logging.addFilter(filterERROR);					
+				}else if (error_Details.equals("") && severity_ERROR.equals("")){
+					//do nothing.
+				}else{
+					System.out.println("The excel file is misformed.  Some ERROR info is missing.");
+				}
+					
+				if (!warning_Details.equals("") && !severity_WARNING.equals("")){
+					Filter filterWARNING = new Filter(doc, warning_Details, "WARNING", severity_WARNING);
+					logging.addFilter(filterWARNING);
+				}else if(warning_Details.equals("") && severity_WARNING.equals("")){
+					//do nothing.
+				}else{
+					System.out.println("The excel file is misformed.  Some WARNING info is missing.");
+				}
+					
 				
-				Filter filterWARNING = new Filter(doc, warning_Details, "WARNING", severity_WARNING);
-				logging.addFilter(filterWARNING);
-				
-				Filter filterTRACE = new Filter(doc, trace_Details, "TRACE", severity_TRACE);
-				logging.addFilter(filterTRACE);
+				if (!trace_Details.equals("") && !severity_TRACE.equals("")){
+					Filter filterTRACE = new Filter(doc, trace_Details, "TRACE", severity_TRACE);
+					logging.addFilter(filterTRACE);
+				}else if(trace_Details.equals("") && severity_TRACE.equals("")){
+					//do nothing.
+				}else{
+					System.out.println("The excel file is misformed.  Some TRACE info is missing.");
+				}
 				
 				logging.addFiltersToLogging();
 				
