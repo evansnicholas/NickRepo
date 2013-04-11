@@ -1,0 +1,195 @@
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
+
+
+public class UserInterface extends JPanel implements ActionListener{
+
+	protected static final String componentFieldString = "Component Name"; 
+	protected static final String ftfString = "JFormattedTextField";
+	private String newline = "\n";
+	JTextArea log;
+	JButton generateCodeButton;
+	JTextField componentTextField;
+	
+	 protected JLabel actionLabel;
+	 protected JLabel logLabel;
+	
+	public UserInterface(){
+		
+		 setLayout(new BorderLayout());
+		 
+		//Create a regular text field.
+	    componentTextField = new JTextField(20);
+	    componentTextField.setActionCommand(componentFieldString);
+	    componentTextField.addActionListener(this);
+ 
+        //Create some labels for the fields.
+        JLabel componentFieldLabel = new JLabel(componentFieldString + ": ");
+        componentFieldLabel.setLabelFor(componentTextField);
+ 
+        //Create a label to put messages during an action event.
+        actionLabel = new JLabel("Enter the name of the component you wish to create and press generate to start code generation.");
+        actionLabel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
+        
+        //Create a screen to display log messages
+        log = new JTextArea(5,20);
+        log.setMargin(new Insets(5,5,5,5));
+        log.setEditable(false);
+        JScrollPane logScrollPane = new JScrollPane(log);
+        logScrollPane.setPreferredSize(new Dimension(350, 350));
+        logScrollPane.setMinimumSize(new Dimension(10, 10));
+        logScrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        
+        //Create a generate button
+        generateCodeButton = new JButton("Generate!");
+        generateCodeButton.addActionListener(this);
+        
+        //Lay out the text controls and the labels for the input panel.
+        JPanel textControlsPane = new JPanel();
+        GridBagLayout gridbag = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+ 
+        textControlsPane.setLayout(gridbag);
+ 
+        JLabel[] labels = {componentFieldLabel};
+        JTextField[] textFields = {componentTextField};
+        addLabelTextRows(labels, textFields, gridbag, textControlsPane);
+ 
+        c.gridwidth = GridBagConstraints.REMAINDER; //last
+        c.anchor = GridBagConstraints.WEST;
+        c.weightx = 1.0;
+        textControlsPane.add(actionLabel, c);
+        textControlsPane.setBorder(
+                BorderFactory.createCompoundBorder(
+                                BorderFactory.createTitledBorder("Create a new component."),
+                                BorderFactory.createEmptyBorder(5,5,5,5)));
+        
+        //Lay out the text controls and the labels for the log panel.
+        JPanel logDisplayPane = new JPanel();
+        
+        logDisplayPane.setLayout(gridbag);
+        
+        logDisplayPane.add(logScrollPane);
+        
+        logDisplayPane.setBorder(
+                BorderFactory.createCompoundBorder(
+                                BorderFactory.createTitledBorder("Log Screen."),
+                                BorderFactory.createEmptyBorder(5,5,5,5)));
+        
+        //Create a panel for the buttons
+        JPanel buttonPane = new JPanel();
+        
+        buttonPane.add(generateCodeButton);
+            
+        
+        //Put everything together.
+        JPanel leftPane = new JPanel(new BorderLayout());
+        leftPane.add(textControlsPane,
+                     BorderLayout.PAGE_START);
+        
+        leftPane.add(logDisplayPane,
+        			  BorderLayout.CENTER);
+ 
+        add(leftPane, BorderLayout.LINE_START);
+        add(buttonPane, BorderLayout.LINE_END);
+    }
+	
+	 private void addLabelTextRows(JLabel[] labels, JTextField[] textFields, GridBagLayout gridbag, Container container) {
+		 
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.EAST;
+		int numLabels = labels.length;
+		
+		for (int i = 0; i < numLabels; i++) {
+			c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
+			c.fill = GridBagConstraints.NONE;      //reset to default
+			c.weightx = 0.0;                       //reset to default
+			container.add(labels[i], c);
+			
+			c.gridwidth = GridBagConstraints.REMAINDER;     //end row
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.weightx = 1.0;
+			container.add(textFields[i], c);
+		}
+	}
+	
+	 
+	 protected void addStylesToDocument(StyledDocument doc) {
+	        //Initialize some styles.
+	        Style def = StyleContext.getDefaultStyleContext().
+	                        getStyle(StyleContext.DEFAULT_STYLE);
+	 
+	        Style regular = doc.addStyle("regular", def);
+	        StyleConstants.setFontFamily(def, "SansSerif");
+	 
+	        Style s = doc.addStyle("italic", regular);
+	        StyleConstants.setItalic(s, true);
+	 
+	        s = doc.addStyle("bold", regular);
+	        StyleConstants.setBold(s, true);
+	 
+	        s = doc.addStyle("small", regular);
+	        StyleConstants.setFontSize(s, 10);
+	 
+	        s = doc.addStyle("large", regular);
+	        StyleConstants.setFontSize(s, 16);
+	       
+	    }
+	 
+	 
+	public void actionPerformed(ActionEvent e) {
+
+		String prefix = "You typed \"";
+        
+		/*if (componentFieldString.equals(e.getActionCommand())) {
+            
+        	//Update action label
+        	JTextField source = (JTextField)e.getSource();
+            actionLabel.setText(prefix + source.getText() + "\"");
+            
+            //Update log screen
+            log.append(source.getText() + newline);
+            
+            log.setCaretPosition(log.getDocument().getLength());     
+        }*/
+		
+        if (e.getSource() == generateCodeButton){
+        	
+        	log.append("Code for "+componentTextField.getText()+" will be generated."+newline);
+        	log.setCaretPosition(log.getDocument().getLength());
+        	
+        }
+	}
+
+}

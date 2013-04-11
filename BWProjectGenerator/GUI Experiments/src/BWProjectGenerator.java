@@ -2,7 +2,6 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.*;
  
 /*
@@ -29,6 +28,8 @@ public class BWProjectGenerator extends JPanel
         log.setMargin(new Insets(5,5,5,5));
         log.setEditable(false);
         JScrollPane logScrollPane = new JScrollPane(log);
+        logScrollPane.setPreferredSize(new Dimension(250, 155));
+        logScrollPane.setMinimumSize(new Dimension(10, 10));
         
         //Create the radio buttons
         
