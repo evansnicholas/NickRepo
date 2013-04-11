@@ -11,10 +11,12 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -40,18 +42,42 @@ public class UserInterface extends JPanel implements ActionListener{
 	JTextArea log;
 	JButton generateCodeButton;
 	JTextField componentTextField;
+	JComboBox componentsList;
+	String[] previousComponents;
+	ConfigFileLoader configFileLoader;
 	
 	 protected JLabel actionLabel;
 	 protected JLabel logLabel;
 	
-	public UserInterface(){
-		
-		 setLayout(new BorderLayout());
+	 public UserInterface(){
 		 
+		setLayout(new BorderLayout());
+		
+		//Create a screen to display log messages
+        log = new JTextArea(5,20);
+        log.setMargin(new Insets(5,5,5,5));
+        log.setEditable(false);
+        JScrollPane logScrollPane = new JScrollPane(log);
+        logScrollPane.setPreferredSize(new Dimension(500, 500));
+        logScrollPane.setMinimumSize(new Dimension(10, 10));
+        logScrollPane.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        
+      //Create a ConfigFileLoader object
+      this.configFileLoader = new ConfigFileLoader("misc/config.txt", StandardCharsets.UTF_8, log);  
+        
 		//Create a regular text field.
 	    componentTextField = new JTextField(20);
 	    componentTextField.setActionCommand(componentFieldString);
 	    componentTextField.addActionListener(this);
+	    
+	    //load the past components for the combo box
+	    previousComponents = configFileLoader.getPastComponents();
+	    
+	    //Create an editable combo box
+	    componentsList = new JComboBox(previousComponents);
+		componentsList.setEditable(true);
+		componentsList.addActionListener(this);
  
         //Create some labels for the fields.
         JLabel componentFieldLabel = new JLabel(componentFieldString + ": ");
@@ -60,16 +86,6 @@ public class UserInterface extends JPanel implements ActionListener{
         //Create a label to put messages during an action event.
         actionLabel = new JLabel("Enter the name of the component you wish to create and press generate to start code generation.");
         actionLabel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
-        
-        //Create a screen to display log messages
-        log = new JTextArea(5,20);
-        log.setMargin(new Insets(5,5,5,5));
-        log.setEditable(false);
-        JScrollPane logScrollPane = new JScrollPane(log);
-        logScrollPane.setPreferredSize(new Dimension(350, 350));
-        logScrollPane.setMinimumSize(new Dimension(10, 10));
-        logScrollPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
         //Create a generate button
         generateCodeButton = new JButton("Generate!");
@@ -83,8 +99,11 @@ public class UserInterface extends JPanel implements ActionListener{
         textControlsPane.setLayout(gridbag);
  
         JLabel[] labels = {componentFieldLabel};
-        JTextField[] textFields = {componentTextField};
-        addLabelTextRows(labels, textFields, gridbag, textControlsPane);
+        //JTextField[] textFields = {componentTextField};
+        JComboBox[] jComboBoxes = {componentsList};
+        //addLabelTextRows(labels, textFields, gridbag, textControlsPane);
+        addLabelJComboRows(labels, jComboBoxes, gridbag, textControlsPane);
+        
  
         c.gridwidth = GridBagConstraints.REMAINDER; //last
         c.anchor = GridBagConstraints.WEST;
@@ -92,7 +111,7 @@ public class UserInterface extends JPanel implements ActionListener{
         textControlsPane.add(actionLabel, c);
         textControlsPane.setBorder(
                 BorderFactory.createCompoundBorder(
-                                BorderFactory.createTitledBorder("Create a new component."),
+                                BorderFactory.createTitledBorder("Create a new component"),
                                 BorderFactory.createEmptyBorder(5,5,5,5)));
         
         //Lay out the text controls and the labels for the log panel.
@@ -104,13 +123,18 @@ public class UserInterface extends JPanel implements ActionListener{
         
         logDisplayPane.setBorder(
                 BorderFactory.createCompoundBorder(
-                                BorderFactory.createTitledBorder("Log Screen."),
+                                BorderFactory.createTitledBorder("Log Screen"),
                                 BorderFactory.createEmptyBorder(5,5,5,5)));
         
         //Create a panel for the buttons
         JPanel buttonPane = new JPanel();
         
         buttonPane.add(generateCodeButton);
+        
+        buttonPane.setBorder(
+                BorderFactory.createCompoundBorder(
+                                BorderFactory.createTitledBorder("Actions"),
+                                BorderFactory.createEmptyBorder(5,5,5,5)));
             
         
         //Put everything together.
@@ -123,6 +147,7 @@ public class UserInterface extends JPanel implements ActionListener{
  
         add(leftPane, BorderLayout.LINE_START);
         add(buttonPane, BorderLayout.LINE_END);
+        
     }
 	
 	 private void addLabelTextRows(JLabel[] labels, JTextField[] textFields, GridBagLayout gridbag, Container container) {
@@ -143,6 +168,27 @@ public class UserInterface extends JPanel implements ActionListener{
 			container.add(textFields[i], c);
 		}
 	}
+	 
+	 private void addLabelJComboRows(JLabel[] labels, JComboBox[] JComboBox, GridBagLayout gridbag, Container container) {
+		 
+			GridBagConstraints c = new GridBagConstraints();
+			c.anchor = GridBagConstraints.EAST;
+			int numLabels = labels.length;
+			
+			for (int i = 0; i < numLabels; i++) {
+				c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
+				c.fill = GridBagConstraints.NONE;      //reset to default
+				c.weightx = 0.0;                       //reset to default
+				container.add(labels[i], c);
+				
+				c.gridwidth = GridBagConstraints.REMAINDER;     //end row
+				c.fill = GridBagConstraints.HORIZONTAL;
+				c.weightx = 1.0;
+				container.add(JComboBox[i], c);
+			}
+		}
+	 
+	 
 	
 	 
 	 protected void addStylesToDocument(StyledDocument doc) {
@@ -165,8 +211,7 @@ public class UserInterface extends JPanel implements ActionListener{
 	        s = doc.addStyle("large", regular);
 	        StyleConstants.setFontSize(s, 16);
 	       
-	    }
-	 
+	    } 
 	 
 	public void actionPerformed(ActionEvent e) {
 
@@ -186,7 +231,7 @@ public class UserInterface extends JPanel implements ActionListener{
 		
         if (e.getSource() == generateCodeButton){
         	
-        	log.append("Code for "+componentTextField.getText()+" will be generated."+newline);
+        	log.append("Code for "+componentsList.getSelectedItem().toString()+" will be generated."+newline);
         	log.setCaretPosition(log.getDocument().getLength());
         	
         }
