@@ -64,7 +64,7 @@ public class UserInterface extends JPanel implements ActionListener{
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
       //Create a ConfigFileLoader object
-      this.configFileLoader = new ConfigFileLoader("misc/config.txt", StandardCharsets.UTF_8, log);  
+      this.configFileLoader = new ConfigFileLoader("misc/config.txt", StandardCharsets.US_ASCII, log);  
         
 		//Create a regular text field.
 	    componentTextField = new JTextField(20);
@@ -231,8 +231,11 @@ public class UserInterface extends JPanel implements ActionListener{
 		
         if (e.getSource() == generateCodeButton){
         	
-        	log.append("Code for "+componentsList.getSelectedItem().toString()+" will be generated."+newline);
+        	String componentName = componentsList.getSelectedItem().toString();
+        	
+        	log.append("Code for "+componentName+" will be generated."+newline);
         	log.setCaretPosition(log.getDocument().getLength());
+        	configFileLoader.addComponentNameToPastComponentsList(componentName);
         	
         }
 	}

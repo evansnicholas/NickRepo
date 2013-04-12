@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 import javax.swing.JTextArea;
@@ -25,7 +27,6 @@ public class ConfigFileLoader {
 		
 		String[] pastComponents; 
 		ArrayList<String> pastComponentsList = new ArrayList<String>();
-		Boolean addComponentName = false; 
 		
 		try (BufferedReader reader = Files.newBufferedReader(configFileLocation.toPath(), charset)) {
 			
@@ -33,24 +34,7 @@ public class ConfigFileLoader {
 		    
 		    while ((line = reader.readLine()) != null) {
 		    	
-		    	log.append(line + "\n");
-		    	
-		    	if (addComponentName == true){
-		    		
 		    		pastComponentsList.add(line);
-		    		
-		    	}
-		    	
-		    	if (line.equals("#components")){
-		    		
-		    		addComponentName = true;
-		    	}
-		    	
-		    	if (line.equals("") && addComponentName == true){
-			
-		    		break;
-		    		
-		    	}
 		    	
 		    }
 		    
@@ -81,6 +65,21 @@ public class ConfigFileLoader {
 		pastComponents = new String[1];
 		pastComponents[0] = "no previous components"; 		
 		return pastComponents;
+		
+	}
+	
+	public void addComponentNameToPastComponentsList(String componentName){
+		
+		try (BufferedWriter writer = Files.newBufferedWriter(configFileLocation.toPath(), charset, StandardOpenOption.APPEND)) {
+			
+		    writer.write("\n"+componentName, 0, componentName.length()+1);
+		    
+		} catch (IOException x) {
+			
+			log.append("The path for the config file "+x.getMessage()+" does not exist." + "\n");
+		    log.setCaretPosition(log.getDocument().getLength());
+		    
+		}
 		
 	}
 	
