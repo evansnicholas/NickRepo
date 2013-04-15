@@ -1,3 +1,5 @@
+package nl.ziggo.ICC;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -64,7 +66,7 @@ public class UserInterface extends JPanel implements ActionListener{
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
       //Create a ConfigFileLoader object
-      this.configFileLoader = new ConfigFileLoader("misc/config.txt", StandardCharsets.US_ASCII, log);  
+      this.configFileLoader = new ConfigFileLoader("misc/memory.txt", StandardCharsets.US_ASCII, log);  
         
 		//Create a regular text field.
 	    componentTextField = new JTextField(20);

@@ -69,62 +69,66 @@ public class XMLFileCreator {
 					
 					if (row.get(j).toString().equals("INFO_Details")){
 						
-						if (row.get(j-2).toString().equals("Severity_INFO")){
-							severity_INFO = row.get(j-3).toString();
-						}
-						
 						info_Details = row.get(j-1).toString();
 						
-					}else if (row.get(j).toString().equals("DEBUG_Details")){
+					}else if(row.get(j).toString().equals("Severity_INFO")){
 						
-						if(row.get(j-2).toString().equals("Severity_DEBUG")){
-							severity_DEBUG = row.get(j-3).toString();
-						}
+						severity_INFO = row.get(j-1).toString();
+							
+					}else if (row.get(j).toString().equals("DEBUG_Details")){
 						
 						debug_Details = row.get(j-1).toString();
 						
+					}else if(row.get(j).toString().equals("Severity_DEBUG")){
+						
+						severity_DEBUG = row.get(j-1).toString();
+							
 					}else if (row.get(j).toString().equals("ERROR_Details")){
 						
-						if (row.get(j-2).toString().equals("Severity_ERROR")){
-							severity_ERROR = row.get(j-3).toString();
-						}
-						
 						error_Details = row.get(j-1).toString();
-												
+						
+					}else if (row.get(j).toString().equals("Severity_ERROR")){
+						
+						severity_ERROR = row.get(j-1).toString();
+							
 					}else if (row.get(j).toString().equals("FATAL_Details")){
 						
-						if (row.get(j-2).toString().equals("Severity_FATAL")){
-							severity_FATAL = row.get(j-3).toString();
-						}
-						
 						fatal_Details = row.get(j-1).toString();
+					
+					}else if (row.get(j).toString().equals("Severity_FATAL")){
+						
+						severity_FATAL = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("TRACE_Details")){
 						
-						if (row.get(j-2).toString().equals("Severity_TRACE")){
-							severity_TRACE = row.get(j-3).toString();
-						}
-						
 						trace_Details = row.get(j-1).toString();
+						
+					}else if (row.get(j).toString().equals("Severity_TRACE")){
+						
+						severity_TRACE = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("WARNING_Details")){
 						
-						if (row.get(j-2).toString().equals("Severity_WARNING")){
-							severity_WARNING = row.get(j-3).toString();
-						}
-						
 						warning_Details = row.get(j-1).toString();
 						
+					}else if (row.get(j).toString().equals("Severity_WARNING")){
+						
+						severity_WARNING = row.get(j-1).toString();
+							
 					}else if (row.get(j).toString().equals("Service")){
+						
 						service = row.get(j-1);
 						
 					}else if (row.get(j).toString().equals("generateInternalHeader")){
+						
 						isInternalHeader = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("version")){
+						
 						version = row.get(j-1).toString();
 						
 					}else if (row.get(j).toString().equals("target")){
+						
 						target = row.get(j-1).toString();
 						
 					}
@@ -167,7 +171,8 @@ public class XMLFileCreator {
 				}else if (info_Details.equals("") && severity_INFO.equals("")){
 					//do nothing.
 				}else{
-					System.out.println("The excel file is misformed.  Some INFO info is missing.");
+					System.out.println("The excel file is misformed.  Some INFO information is missing.");
+					System.exit(-1);
 				}
 					
 				if (!debug_Details.equals("") && !severity_DEBUG.equals("")){
@@ -176,7 +181,8 @@ public class XMLFileCreator {
 				}else if(debug_Details.equals("") && severity_DEBUG.equals("")){
 					//do nothing.
 				}else{
-					System.out.println("The excel file is misformed.  Some DEBUG info is missing.");
+					System.out.println("The excel file is misformed.  Some DEBUG information is missing.");
+					System.exit(-1);
 				}
 				
 				if (!fatal_Details.equals("") && !severity_FATAL.equals("")){	
@@ -186,7 +192,8 @@ public class XMLFileCreator {
 					//do nothing.
 				
 				}else{
-					System.out.println("The excel file is misformed.  Some FATAL info is missing.");
+					System.out.println("The excel file is misformed.  Some FATAL information is missing.");
+					System.exit(-1);
 				}
 					
 				if (!error_Details.equals("") && !severity_ERROR.equals("")){
@@ -195,7 +202,8 @@ public class XMLFileCreator {
 				}else if (error_Details.equals("") && severity_ERROR.equals("")){
 					//do nothing.
 				}else{
-					System.out.println("The excel file is misformed.  Some ERROR info is missing.");
+					System.out.println("The excel file is misformed.  Some ERROR information is missing.");
+					System.exit(-1);
 				}
 					
 				if (!warning_Details.equals("") && !severity_WARNING.equals("")){
@@ -204,7 +212,8 @@ public class XMLFileCreator {
 				}else if(warning_Details.equals("") && severity_WARNING.equals("")){
 					//do nothing.
 				}else{
-					System.out.println("The excel file is misformed.  Some WARNING info is missing.");
+					System.out.println("The excel file is misformed.  Some WARNING information is missing.");
+					System.exit(-1);
 				}
 					
 				
@@ -214,7 +223,8 @@ public class XMLFileCreator {
 				}else if(trace_Details.equals("") && severity_TRACE.equals("")){
 					//do nothing.
 				}else{
-					System.out.println("The excel file is misformed.  Some TRACE info is missing.");
+					System.out.println("The excel file is misformed.  Some TRACE information is missing.");
+					System.exit(-1);
 				}
 				
 				logging.addFiltersToLogging();
