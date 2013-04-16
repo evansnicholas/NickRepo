@@ -107,11 +107,25 @@ public class Utilities {
 				
 				log.append("An error occurred wile copying the file.  The error is :"+e.getMessage()+".  Code generation aborted.\n");
 			    log.setCaretPosition(log.getDocument().getLength());
+			    return;
 				
 			}catch(Exception e){
 				log.append("An error occurred wile copying the file.  The error is :"+e.getMessage()+".  Code generation aborted.\n");
-			    log.setCaretPosition(log.getDocument().getLength());			
+			    log.setCaretPosition(log.getDocument().getLength());
+			    return;
 			}
+			
+		}
+		
+		try{
+				
+			FileUtils.cleanDirectory(tempFolder);
+			
+		}catch(IOException e){
+			
+			log.append("An error occurred wile cleaning the temporary directory.  The error is :"+e.getMessage()+".  Code generation aborted.\n");
+		    log.setCaretPosition(log.getDocument().getLength());
+			
 		}
 		
 	}

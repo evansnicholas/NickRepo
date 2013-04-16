@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>Name</name>
+			<value>~OPERATION_NAME~</value>
+			<deploymentSettable>false</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1364902043033</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>RequestQueue</name>
+			<value>icc.~ADAPTER_NAME_LOWERCASE~.~OPERATION_NAME_LOWERCASE~.~OPERATION_VERSION~.queue</value>
+			<deploymentSettable>false</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1364902043423</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>Version</name>
+			<value>~OPERATION_VERSION~</value>
+			<deploymentSettable>false</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1364902043345</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

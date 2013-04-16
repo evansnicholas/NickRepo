@@ -243,17 +243,21 @@ public class UserInterface extends JPanel implements ActionListener{
         	
         	//Unit Tests
         	ArrayList<String[]> termsToBeReplaced = new ArrayList<String[]>();
-        	String[] pair = {"[~]OPERATION_NAME[~]", "test"};
-        	String[] pair2 = {"[~]OPERATION_VERSION[~]", "1"};
-        	String[] pair3 = {"[~]CDM_ENTITY[~]", "Incident"};
-        	String[] pair4 = {"[~]ADAPTER_NAME[~]", "adpTest"};
+        	String[] pair = {"[~]OPERATION_NAME[~]", "TcyManageBillingForTracy"};
+        	String[] pair2 = {"[~]OPERATION_VERSION[~]", "2"};
+        	String[] pair3 = {"[~]CDM_ENTITY[~]", "Order"};
+        	String[] pair4 = {"[~]ADAPTER_NAME[~]", "adpTracy"};
+        	String[] pair5 = {"[~]ADAPTER_NAME_LOWERCASE[~]", "adptracy"};
+        	String[] pair6 = {"[~]OPERATION_NAME_LOWERCASE[~]", "tcymanagebillingfortracy"};
         	termsToBeReplaced.add(pair);
         	termsToBeReplaced.add(pair2);
         	termsToBeReplaced.add(pair3);
         	termsToBeReplaced.add(pair4);
+        	termsToBeReplaced.add(pair5);
+        	termsToBeReplaced.add(pair6);
         	Utilities u = new Utilities(log);
         	u.searchReplaceAndWriteToTempFolder(termsToBeReplaced, new File("C:\\Users\\iggo\\Desktop\\Test\\Templates"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"));
-        	u.copyFilesFromTempFolderBasedOnName(new File("C:\\Users\\iggo\\Desktop\\Test\\Functionalities"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"), termsToBeReplaced);
+        	u.copyFilesFromTempFolderBasedOnName(new File("C:\\Users\\iggo\\Desktop\\Test\\adpTracy"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"), termsToBeReplaced);
         	
         	
         	

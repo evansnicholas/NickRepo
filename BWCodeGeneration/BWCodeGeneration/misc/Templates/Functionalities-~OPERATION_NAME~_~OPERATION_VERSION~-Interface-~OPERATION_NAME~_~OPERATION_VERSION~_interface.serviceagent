@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serviceResource xmlns:wsdl="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~">
+    <ns0:import xmlns:ns0="http://schemas.xmlsoap.org/wsdl/" namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~" location="/Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Resources/InternalResources/WSDL/~OPERATION_NAME~_~OPERATION_VERSION~.wsdl"/>
+    <config>
+        <class>com.tibco.bw.service.serviceAgent.ServiceServiceAgent</class>
+        <implType>bw</implType>
+        <groups>
+            <row isDefault="true" groupName="Default"/>
+        </groups>
+        <name>~OPERATION_NAME~_~OPERATION_VERSION~_interface</name>
+        <resourceType>service.definition</resourceType>
+        <serviceChange>Tue Apr 02 14:29:50 CEST 2013</serviceChange>
+        <interfaceImpl>
+            <tab>
+                <tabName>~OPERATION_NAME~PortType</tabName>
+                <tabType>bw</tabType>
+                <config>
+                    <wsdlDetail location="/Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Resources/InternalResources/WSDL/~OPERATION_NAME~_~OPERATION_VERSION~.wsdl" portType="~OPERATION_NAME~PortType" ns="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~"/>
+                    <detail>
+                        <tab>
+                            <tabName>service.definition.impl.tab.label</tabName>
+                            <tabType>impl</tabType>
+                            <config>
+                                <operations>
+                                    <row opName="~OPERATION_NAME~_~OPERATION_VERSION~" opImpl="/Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Interface/~OPERATION_NAME~_~OPERATION_VERSION~/~OPERATION_NAME~_~OPERATION_VERSION~.process"/>
+                                </operations>
+                            </config>
+                        </tab>
+                        <tab>
+                            <tabName>service.definition.ep.tab.label</tabName>
+                            <tabType>ep</tabType>
+                            <config>
+                                <epBindings>
+                                    <row epName="~OPERATION_NAME~_~OPERATION_VERSION~.Endpoint" epType="soap">
+                                        <config>
+                                            <epDetail>
+                                                <tab>
+                                                    <tabName>soap.service.transport.ui.transport.tab.label</tabName>
+                                                    <tabType>transport</tabType>
+                                                    <config>
+                                                        <sharedChannel>/Common/Resources/JMS/ESB EMS Server.sharedjmscon</sharedChannel>
+                                                        <transport>
+                                                            <config>
+                                                                <JMSTo>%%~ADAPTER_NAME~/Services/~OPERATION_NAME~_~OPERATION_VERSION~/RequestQueue%%</JMSTo>
+                                                                <JMSDestinationType>queue</JMSDestinationType>
+                                                                <JMSMessageType>Text</JMSMessageType>
+                                                                <JMSAcknowledgementMode>1</JMSAcknowledgementMode>
+                                                                <ApplicationProperties/>
+                                                                <ApplicationPropertiesOutMessage/>
+                                                                <JMSMaxSessions/>
+                                                                <operations>
+                                                                    <operation name="~OPERATION_NAME~_~OPERATION_VERSION~">
+                                                                        <general>
+                                                                            <config>
+                                                                                <JMSDurable>false</JMSDurable>
+                                                                                <JMSDurableName/>
+                                                                            </config>
+                                                                        </general>
+                                                                    </operation>
+                                                                </operations>
+                                                            </config>
+                                                        </transport>
+                                                    </config>
+                                                </tab>
+                                                <tab>
+                                                    <tabName>soap.service.transport.ui.details.tab.label</tabName>
+                                                    <tabType>details</tabType>
+                                                    <config>
+                                                        <operationStyle>document</operationStyle>
+                                                        <soapVersion>SOAP 1.1</soapVersion>
+                                                        <soap>
+                                                            <operation name="~OPERATION_NAME~_~OPERATION_VERSION~">
+                                                                <general>
+                                                                    <config>
+                                                                        <soapAction>~OPERATION_NAME~_~OPERATION_VERSION~</soapAction>
+                                                                        <operationStyle/>
+                                                                        <soapUse>literal</soapUse>
+                                                                        <inputNamespace/>
+                                                                        <outputNamespace/>
+                                                                        <faultNamespace/>
+                                                                        <portAddressPrefix/>
+                                                                    </config>
+                                                                </general>
+                                                            </operation>
+                                                        </soap>
+                                                    </config>
+                                                </tab>
+                                            </epDetail>
+                                        </config>
+                                    </row>
+                                </epBindings>
+                            </config>
+                        </tab>
+                    </detail>
+                </config>
+            </tab>
+        </interfaceImpl>
+        <wsdl namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/jms" embedWsdlComponents="true" embedSchemaComponents="false" embedJndiProperties="false"/>
+    </config>
+</serviceResource>
