@@ -1,4 +1,4 @@
-package nl.ziggo.ICC;
+package nl.ziggo.icc.tooling.codegenerator;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -38,7 +38,7 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 
-public class UserInterface extends JPanel implements ActionListener{
+public class CodeGenerator extends JPanel implements ActionListener{
 
 	protected static final String componentFieldString = "Component Name"; 
 	protected static final String ftfString = "JFormattedTextField";
@@ -48,12 +48,12 @@ public class UserInterface extends JPanel implements ActionListener{
 	JTextField componentTextField;
 	JComboBox componentsList;
 	String[] previousComponents;
-	ConfigFileLoader configFileLoader;
+	CodeGeneratorConfiguration configFileLoader;
 	
 	 protected JLabel actionLabel;
 	 protected JLabel logLabel;
 	
-	 public UserInterface(){
+	 public CodeGenerator(){
 		 
 		setLayout(new BorderLayout());
 		
@@ -68,7 +68,7 @@ public class UserInterface extends JPanel implements ActionListener{
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
       //Create a ConfigFileLoader object
-      this.configFileLoader = new ConfigFileLoader("misc/memory.txt", StandardCharsets.US_ASCII, log);  
+      this.configFileLoader = new CodeGeneratorConfiguration("misc/memory.txt", StandardCharsets.US_ASCII, log);  
         
 		//Create a regular text field.
 	    componentTextField = new JTextField(20);

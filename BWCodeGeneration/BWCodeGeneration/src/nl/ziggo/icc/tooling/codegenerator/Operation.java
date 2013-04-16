@@ -1,4 +1,4 @@
-package nl.ziggo.ICC;
+package nl.ziggo.icc.tooling.codegenerator;
 import java.io.File;
 
 

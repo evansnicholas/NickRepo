@@ -1,4 +1,4 @@
-package nl.ziggo.ICC;
+package nl.ziggo.icc.tooling.codegenerator;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import javax.swing.JTextArea;
 
 
-public class ConfigFileLoader {
+public class CodeGeneratorConfiguration {
 
 	private File configFileLocation;
 	Charset charset; 
 	JTextArea log;
 	
-	public ConfigFileLoader(String configFilePath, Charset charset, JTextArea log){
+	public CodeGeneratorConfiguration(String configFilePath, Charset charset, JTextArea log){
 		
 		this.configFileLocation = new File(configFilePath);
 		this.charset = charset;

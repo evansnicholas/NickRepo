@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.JTextArea;
 
-import nl.ziggo.ICC.Utilities;
+import nl.ziggo.icc.tooling.codegenerator.tooling.codegenerator.Utilities;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

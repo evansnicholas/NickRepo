@@ -1,4 +1,4 @@
-package nl.ziggo.ICC;
+package nl.ziggo.icc.tooling.codegenerator;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

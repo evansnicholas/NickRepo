@@ -1,4 +1,4 @@
-package nl.ziggo.ICC;
+package nl.ziggo.icc.tooling.codegenerator;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -17,7 +17,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  
         //Add content to the window.
-        frame.add(new UserInterface());
+        frame.add(new CodeGenerator());
  
         //Display the window.
         frame.pack();

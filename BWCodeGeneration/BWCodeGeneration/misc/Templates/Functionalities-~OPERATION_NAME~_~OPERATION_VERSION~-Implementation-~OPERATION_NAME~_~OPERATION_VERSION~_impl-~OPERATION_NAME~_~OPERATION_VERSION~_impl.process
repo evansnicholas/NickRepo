@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.ziggo.nl/Integration/ESB/Generic/CSL/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ZiggoCustom="java://com.tibco.psg.bwutils.BWCustomFunctions" xmlns:pfx3="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" xmlns:pfx2="http://www.ziggo.nl/Integration/ESB/Generic/CMM/2.0" >
+    <xsd:import namespace="http://www.ziggo.nl/Integration/ESB/Generic/CMM/2.0" schemaLocation="/CMM/Resources/Schemas/cmm_2.xsd"/>
+    <xsd:import namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" schemaLocation="/Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Resources/InternalResources/Schemas/~OPERATION_NAME~.xsd"/>
+    <pd:name>Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Implementation/~OPERATION_NAME~_~OPERATION_VERSION~_impl/~OPERATION_NAME~_~OPERATION_VERSION~_impl.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx3:Request"/>
+    <pd:startX>276</pd:startX>
+    <pd:startY>148</pd:startY>
+    <pd:returnBindings>
+        <pfx3:Response>
+            <xsl:copy-of select="$Start/pfx3:Request/pfx2:header"/>
+        </pfx3:Response>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx3:Response"/>
+    <pd:endX>627</pd:endX>
+    <pd:endY>149</pd:endY>
+    <pd:errorSchemas>
+        <Fault ref="pfx3:Fault"/>
+    </pd:errorSchemas>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1363017139815</pd:targetNamespace>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
