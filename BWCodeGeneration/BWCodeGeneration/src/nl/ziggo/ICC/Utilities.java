@@ -30,7 +30,6 @@ public class Utilities {
 			
 			log.append("An error occurred reading the file "+file.getPath()+".  Code generation aborted.\n");
 		    log.setCaretPosition(log.getDocument().getLength());
-			System.exit(-1);
 		    
 		}
 		
@@ -48,7 +47,6 @@ public class Utilities {
 			
 			log.append("An error occurred writing the file "+ file.getPath() + ".  Code generation aborted.\n");
 		    log.setCaretPosition(log.getDocument().getLength());
-		    System.exit(-1);
 			
 		}
 		
@@ -60,16 +58,60 @@ public class Utilities {
 		
 		for (File template : templates){
 			
-			String fileContents = this.readFileAsString(template);
-			
-			for (String[] termPair : termsToBeReplaced){
+			if (template.isDirectory() == true){
 				
-				fileContents.replaceAll(termPair[0], termPair[1]);
+				continue;
+				
+			}else{
+			
+				String fileContents = this.readFileAsString(template);
+				
+				for (String[] termPair : termsToBeReplaced){
+				
+					fileContents = fileContents.replaceAll(termPair[0], termPair[1]);
+				
+				}
+			
+				this.writeStringToFile(fileContents, new File(tempLocation+"\\"+template.getName()));
 				
 			}
+		}		
+	}
+	
+	public void copyFilesFromTempFolderBasedOnName(File rootFolder, File tempFolder, ArrayList<String[]> termsToBeReplaced){		
+		
+		for (File file : tempFolder.listFiles()){
 			
-			this.writeStringToFile(fileContents, new File(tempLocation+"//"+template.getName()));
+			String partialDestinationPath = "";
 			
+			String fileName = file.getName();
+			String[] fileNameParts = fileName.split("-");
+			
+			for (String part : fileNameParts){
+				
+				for (String[] termPair : termsToBeReplaced){
+					
+					part = part.replaceAll(termPair[0], termPair[1]);
+					
+				}
+				
+				partialDestinationPath = partialDestinationPath+"\\"+part;
+				
+			}			
+			
+			try{
+				
+				FileUtils.copyFile(file, new File(rootFolder+"\\"+partialDestinationPath), false);
+				
+			}catch(IOException e){
+				
+				log.append("An error occurred wile copying the file.  The error is :"+e.getMessage()+".  Code generation aborted.\n");
+			    log.setCaretPosition(log.getDocument().getLength());
+				
+			}catch(Exception e){
+				log.append("An error occurred wile copying the file.  The error is :"+e.getMessage()+".  Code generation aborted.\n");
+			    log.setCaretPosition(log.getDocument().getLength());			
+			}
 		}
 		
 	}

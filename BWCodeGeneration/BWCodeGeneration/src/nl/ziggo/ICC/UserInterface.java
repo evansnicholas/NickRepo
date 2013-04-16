@@ -12,8 +12,10 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -238,6 +240,22 @@ public class UserInterface extends JPanel implements ActionListener{
         	log.append("Code for "+componentName+" will be generated."+newline);
         	log.setCaretPosition(log.getDocument().getLength());
         	configFileLoader.addComponentNameToPastComponentsList(componentName);
+        	
+        	//Unit Tests
+        	ArrayList<String[]> termsToBeReplaced = new ArrayList<String[]>();
+        	String[] pair = {"[~]OPERATION_NAME[~]", "test"};
+        	String[] pair2 = {"[~]OPERATION_VERSION[~]", "1"};
+        	String[] pair3 = {"[~]CDM_ENTITY[~]", "Incident"};
+        	String[] pair4 = {"[~]ADAPTER_NAME[~]", "adpTest"};
+        	termsToBeReplaced.add(pair);
+        	termsToBeReplaced.add(pair2);
+        	termsToBeReplaced.add(pair3);
+        	termsToBeReplaced.add(pair4);
+        	Utilities u = new Utilities(log);
+        	u.searchReplaceAndWriteToTempFolder(termsToBeReplaced, new File("C:\\Users\\iggo\\Desktop\\Test\\Templates"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"));
+        	u.copyFilesFromTempFolderBasedOnName(new File("C:\\Users\\iggo\\Desktop\\Test\\Functionalities"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"), termsToBeReplaced);
+        	
+        	
         	
         }
 	}
