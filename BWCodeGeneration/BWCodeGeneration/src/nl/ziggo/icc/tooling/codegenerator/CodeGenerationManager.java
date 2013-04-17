@@ -30,6 +30,8 @@ public class CodeGenerationManager {
 		
 		for (File template : templates){
 			
+			boolean isFolderName = false;
+			
 			if (template.isDirectory() == true){
 				
 				continue;
@@ -52,7 +54,20 @@ public class CodeGenerationManager {
 					//Performing parsing of template Name
 					String partialDestinationPath = "";
 					String templateName = template.getName();
+					
+					if (templateName.endsWith(".directory")){
+						
+						isFolderName = true;
+						
+						int lastDotIndex = templateName.lastIndexOf(".");
+						
+						templateName = templateName.substring(0, lastDotIndex);
+						
+					}
+
 					String[] templateNameParts = templateName.split("-");
+					
+					
 					
 					for (String part : templateNameParts){
 						
@@ -69,11 +84,25 @@ public class CodeGenerationManager {
 					//Create the final destination path for the code
 					File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
 					
-					//Make the necessary directories for the file
-					finalGeneratedFile.getParentFile().mkdirs();
+					//Make the necessary directories for the file if file is not a directory
+					
+					if (isFolderName == false){
+						
+						finalGeneratedFile.getParentFile().mkdirs();
+						
+					}else{
+						
+						finalGeneratedFile.mkdirs();
+						
+					}
+					
 					
 					//Write the string to a file in the correct SVN location.
-					FileUtils.writeStringToFile(finalGeneratedFile, fileContents);
+					if (isFolderName == false){
+						
+						FileUtils.writeStringToFile(finalGeneratedFile, fileContents);
+					
+					}
 					
 					//Log what has been done
 					log.append("Created: " + finalGeneratedFile.getAbsolutePath() + "\n");
