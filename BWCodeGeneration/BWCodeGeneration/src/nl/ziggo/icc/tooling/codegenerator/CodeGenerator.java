@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -31,6 +32,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -68,7 +71,7 @@ public class CodeGenerator extends JPanel implements ActionListener{
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
       //Create a ConfigFileLoader object
-      this.configFileLoader = new CodeGeneratorConfiguration("misc/memory.txt", StandardCharsets.US_ASCII, log);  
+      this.configFileLoader = new CodeGeneratorConfiguration(StandardCharsets.US_ASCII, log);  
         
 		//Create a regular text field.
 	    componentTextField = new JTextField(20);
@@ -237,8 +240,9 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	
         	String componentName = componentsList.getSelectedItem().toString();
         	
-        	log.append("Code for "+componentName+" will be generated."+newline);
+        	log.append("Generating code for "+componentName+"..."+newline);
         	log.setCaretPosition(log.getDocument().getLength());
+        	
         	configFileLoader.addComponentNameToPastComponentsList(componentName);
         	
         	//Unit Tests
@@ -246,7 +250,7 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	String[] pair = {"[~]OPERATION_NAME[~]", "TcyManageBillingForTracy"};
         	String[] pair2 = {"[~]OPERATION_VERSION[~]", "2"};
         	String[] pair3 = {"[~]CDM_ENTITY[~]", "Order"};
-        	String[] pair4 = {"[~]ADAPTER_NAME[~]", "adpTracy"};
+        	String[] pair4 = {"[~]ADAPTER_NAME[~]", componentName};
         	String[] pair5 = {"[~]ADAPTER_NAME_LOWERCASE[~]", "adptracy"};
         	String[] pair6 = {"[~]OPERATION_NAME_LOWERCASE[~]", "tcymanagebillingfortracy"};
         	termsToBeReplaced.add(pair);
@@ -255,13 +259,55 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	termsToBeReplaced.add(pair4);
         	termsToBeReplaced.add(pair5);
         	termsToBeReplaced.add(pair6);
-        	Utilities u = new Utilities(log);
-        	u.searchReplaceAndWriteToTempFolder(termsToBeReplaced, new File("C:\\Users\\iggo\\Desktop\\Test\\Templates"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"));
-        	u.copyFilesFromTempFolderBasedOnName(new File("C:\\Users\\iggo\\Desktop\\Test\\adpTracy"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"), termsToBeReplaced);
         	
+        	//Utilities u = new Utilities(log);
+        	//u.searchReplaceAndWriteToTempFolder(termsToBeReplaced, new File("C:\\Users\\iggo\\Desktop\\Test\\Templates"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"));
+        	//u.copyFilesFromTempFolderBasedOnName(new File("C:\\Users\\iggo\\Desktop\\Test\\adpTracy"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"), termsToBeReplaced);
         	
+        	CodeGenerationManager cgManager = new CodeGenerationManager(componentName, this.log, termsToBeReplaced);
+        	Boolean terminationStatus = cgManager.generateBWCodeForComponent();
+        	
+        	if (terminationStatus == true){
+        		
+	        	log.append("Code generation terminated successfully."+newline);
+	        	log.setCaretPosition(log.getDocument().getLength());
+	        	
+        	}else{
+        		
+        		log.append("Code generation was not successful and was aborted."+newline);
+	        	log.setCaretPosition(log.getDocument().getLength());
+	        	
+        	}
         	
         }
 	}
+	
+	private static void createAndShowGUI() {
+        //Create and set up the window.
+        JFrame frame = new JFrame("Code Generation Tool");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+ 
+        //Add content to the window.
+        frame.add(new CodeGenerator());
+ 
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
+        
+    }
+	
+	public static void main(String[] args) {
+        //Schedule a job for the event dispatching thread:
+        //creating and showing this application's GUI.
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                 //Turn off metal's use of bold fonts
+        UIManager.put("swing.boldMetal", Boolean.FALSE);
+        createAndShowGUI();
+        
+        
+            }
+        });
+    }
 
 }

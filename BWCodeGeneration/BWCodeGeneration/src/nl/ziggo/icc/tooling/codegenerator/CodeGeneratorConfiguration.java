@@ -13,15 +13,21 @@ import javax.swing.JTextArea;
 
 public class CodeGeneratorConfiguration {
 
-	private File configFileLocation;
-	Charset charset; 
-	JTextArea log;
+	private static File memoryFileLocation = new File("misc\\memory.txt");
+	private static File configFileLocation = new File("misc\\config.txt");
+	private Charset charset; 
+	private JTextArea log;
 	
-	public CodeGeneratorConfiguration(String configFilePath, Charset charset, JTextArea log){
+	public static File svnComponentsFile;
+	public static File templatesLocation;
+	
+	
+	public CodeGeneratorConfiguration(Charset charset, JTextArea log){
 		
-		this.configFileLocation = new File(configFilePath);
 		this.charset = charset;
 		this.log = log;
+		this.getDirectoryPathsFromConfigFile();
+		
 	}
 	
 	public String[] getPastComponents(){
@@ -29,7 +35,7 @@ public class CodeGeneratorConfiguration {
 		String[] pastComponents; 
 		ArrayList<String> pastComponentsList = new ArrayList<String>();
 		
-		try (BufferedReader reader = Files.newBufferedReader(configFileLocation.toPath(), charset)) {
+		try (BufferedReader reader = Files.newBufferedReader(memoryFileLocation.toPath(), charset)) {
 			
 		    String line = null;
 		    
@@ -58,7 +64,7 @@ public class CodeGeneratorConfiguration {
 		       		    
 		}catch (IOException x) {
 			
-		    log.append("The path for the config file "+x.getMessage()+" does not exist." + "\n");
+		    log.append("The path for the memory file "+x.getMessage()+" does not exist." + "\n");
 		    log.setCaretPosition(log.getDocument().getLength());
 		    
 		}
@@ -71,17 +77,54 @@ public class CodeGeneratorConfiguration {
 	
 	public void addComponentNameToPastComponentsList(String componentName){
 		
-		try (BufferedWriter writer = Files.newBufferedWriter(configFileLocation.toPath(), charset, StandardOpenOption.APPEND)) {
+		try (BufferedWriter writer = Files.newBufferedWriter(memoryFileLocation.toPath(), charset, StandardOpenOption.APPEND)) {
 			
 		    writer.write("\n"+componentName, 0, componentName.length()+1);
 		    
 		} catch (IOException x) {
 			
-			log.append("The path for the config file "+x.getMessage()+" does not exist." + "\n");
+			log.append("The path for the memory file "+x.getMessage()+" does not exist." + "\n");
 		    log.setCaretPosition(log.getDocument().getLength());
 		    
 		}
 		
+	}
+	
+	public void getDirectoryPathsFromConfigFile(){
+		
+		try (BufferedReader reader = Files.newBufferedReader(configFileLocation.toPath(), charset)) {
+			
+		    String line = null;
+		    
+		    while ((line = reader.readLine()) != null) {
+		    	
+		    		if (line.startsWith("svn_components_location")){
+		    			
+		    			int equalsPosition = line.indexOf("=");
+		    			svnComponentsFile = new File(line.substring(equalsPosition+1, line.length()).trim());
+		    			log.append("Configured SVN components location is: "+svnComponentsFile.getPath() + "\n");
+		    		    log.setCaretPosition(log.getDocument().getLength());
+		    		    		    		
+		    		}
+		    		
+		    		if (line.startsWith("templates_directory_location")){
+		    			
+		    			int equalsPosition = line.indexOf("=");
+		    			templatesLocation = new File(line.substring(equalsPosition+1, line.length()).trim());
+		    			log.append("Configured templates directory location is: "+templatesLocation.getPath() + "\n");
+		    		    log.setCaretPosition(log.getDocument().getLength());
+		    		    		    		
+		    		}
+		    	
+		    }
+		    
+		}catch(IOException x) {
+			
+		    log.append("The path for the config file "+x.getMessage()+" does not exist." + "\n");
+		    log.setCaretPosition(log.getDocument().getLength());
+		    
+		}
+				
 	}
 	
 	
