@@ -17,9 +17,9 @@ public class CodeGeneratorConfiguration {
 	private static File configFileLocation = new File("misc\\config.txt");
 	private Charset charset; 
 	private JTextArea log;
-	
 	public static File svnComponentsFile;
 	public static File templatesLocation;
+	private ArrayList<String> pastComponents;
 	
 	
 	public CodeGeneratorConfiguration(Charset charset, JTextArea log){
@@ -44,6 +44,8 @@ public class CodeGeneratorConfiguration {
 		    		pastComponentsList.add(line);
 		    	
 		    }
+		    
+		    this.pastComponents = pastComponentsList;
 		    
 		    int pastComponentsListSize = pastComponentsList.size();
 		    	
@@ -77,9 +79,25 @@ public class CodeGeneratorConfiguration {
 	
 	public void addComponentNameToPastComponentsList(String componentName){
 		
+		if (componentName.equals("")){
+			return;
+		}
+		
+		for (String pastComponent : pastComponents){
+			
+			if (componentName.equals(pastComponent)){
+				
+				return;
+				
+			}
+			
+		}
+		
+		this.pastComponents.add(componentName);
+		
 		try (BufferedWriter writer = Files.newBufferedWriter(memoryFileLocation.toPath(), charset, StandardOpenOption.APPEND)) {
 			
-		    writer.write("\n"+componentName, 0, componentName.length()+1);
+		    writer.write(componentName+"\n", 0, componentName.length()+1);
 		    
 		} catch (IOException x) {
 			

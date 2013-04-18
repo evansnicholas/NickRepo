@@ -92,8 +92,8 @@ public class CodeGenerator extends JPanel implements ActionListener{
         componentFieldLabel.setLabelFor(componentTextField);
  
         //Create a label to put messages during an action event.
-        actionLabel = new JLabel("Enter the name of the component you wish to create and press generate to start code generation.");
-        actionLabel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
+        //actionLabel = new JLabel("Enter the name of the component you wish to create and press generate to start code generation.");
+        //actionLabel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
         
         //Create a generate button
         generateCodeButton = new JButton("Generate!");
@@ -102,21 +102,27 @@ public class CodeGenerator extends JPanel implements ActionListener{
         //Lay out the text controls and the labels for the input panel.
         JPanel textControlsPane = new JPanel();
         GridBagLayout gridbag = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+        GridBagConstraints textConstraints = new GridBagConstraints();
  
         textControlsPane.setLayout(gridbag);
  
-        JLabel[] labels = {componentFieldLabel};
+        //JLabel[] labels = {componentFieldLabel};
         //JTextField[] textFields = {componentTextField};
-        JComboBox[] jComboBoxes = {componentsList};
+        //JComboBox[] jComboBoxes = {componentsList};
         //addLabelTextRows(labels, textFields, gridbag, textControlsPane);
-        addLabelJComboRows(labels, jComboBoxes, gridbag, textControlsPane);
+        //addLabelJComboRows(labels, jComboBoxes, gridbag, textControlsPane);
         
  
-        c.gridwidth = GridBagConstraints.REMAINDER; //last
-        c.anchor = GridBagConstraints.WEST;
-        c.weightx = 1.0;
-        textControlsPane.add(actionLabel, c);
+        //textConstraints.gridwidth = GridBagConstraints.REMAINDER; //last
+        //textConstraints.anchor = GridBagConstraints.WEST;
+        //textConstraints.weightx = 1.0;
+        textConstraints.fill = GridBagConstraints.BOTH;
+        textConstraints.gridx = 0;
+        textConstraints.gridy = 0;
+        //textControlsPane.add(actionLabel, textConstraints);
+        textControlsPane.add(componentsList, textConstraints);
+        textControlsPane.add(componentFieldLabel, textConstraints);
+        
         textControlsPane.setBorder(
                 BorderFactory.createCompoundBorder(
                                 BorderFactory.createTitledBorder("Create a new component"),
@@ -127,7 +133,14 @@ public class CodeGenerator extends JPanel implements ActionListener{
         
         logDisplayPane.setLayout(gridbag);
         
-        logDisplayPane.add(logScrollPane);
+        GridBagConstraints logConstraints = new GridBagConstraints();
+        //logConstraints.weightx = 1.0;
+        //logConstraints.weightx = 1.0;
+        logConstraints.fill = GridBagConstraints.BOTH;
+        logConstraints.gridx = 0;
+        logConstraints.gridy = 1;
+        
+        logDisplayPane.add(logScrollPane, logConstraints);
         
         logDisplayPane.setBorder(
                 BorderFactory.createCompoundBorder(
@@ -146,6 +159,7 @@ public class CodeGenerator extends JPanel implements ActionListener{
             
         
         //Put everything together.
+        /*
         JPanel leftPane = new JPanel(new BorderLayout());
         leftPane.add(textControlsPane,
                      BorderLayout.PAGE_START);
@@ -155,7 +169,11 @@ public class CodeGenerator extends JPanel implements ActionListener{
  
         add(leftPane, BorderLayout.LINE_START);
         add(buttonPane, BorderLayout.LINE_END);
+        */
         
+        add(textControlsPane, BorderLayout.PAGE_START);
+        add(logScrollPane, BorderLayout.CENTER);
+        add(buttonPane, BorderLayout.LINE_END);
     }
 	
 	 private void addLabelTextRows(JLabel[] labels, JTextField[] textFields, GridBagLayout gridbag, Container container) {
@@ -245,28 +263,6 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	log.setCaretPosition(log.getDocument().getLength());
         	
         	configFileLoader.addComponentNameToPastComponentsList(componentName);
-        	
-        	//Unit Tests
-        	/*
-        	ArrayList<String[]> termsToBeReplaced = new ArrayList<String[]>();
-        	String[] pair = {"[~]OPERATION_NAME[~]", "TcyManageBillingForTracy"};
-        	String[] pair2 = {"[~]OPERATION_VERSION[~]", "2"};
-        	String[] pair3 = {"[~]CDM_ENTITY[~]", "Order"};
-        	String[] pair4 = {"[~]ADAPTER_NAME[~]", componentName};
-        	String[] pair5 = {"[~]ADAPTER_NAME_LOWERCASE[~]", "adptracy"};
-        	String[] pair6 = {"[~]OPERATION_NAME_LOWERCASE[~]", "tcymanagebillingfortracy"};
-        	termsToBeReplaced.add(pair);
-        	termsToBeReplaced.add(pair2);
-        	termsToBeReplaced.add(pair3);
-        	termsToBeReplaced.add(pair4);
-        	termsToBeReplaced.add(pair5);
-        	termsToBeReplaced.add(pair6);
-        	*/
-        	
-        	
-        	//Utilities u = new Utilities(log);
-        	//u.searchReplaceAndWriteToTempFolder(termsToBeReplaced, new File("C:\\Users\\iggo\\Desktop\\Test\\Templates"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"));
-        	//u.copyFilesFromTempFolderBasedOnName(new File("C:\\Users\\iggo\\Desktop\\Test\\adpTracy"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"), termsToBeReplaced);
         	
         	HashMap<String, String> placeHolders = new HashMap<String, String>();
         	placeHolders.put("cdmEntity", "[~]CDM_ENTITY[~]");

@@ -27,9 +27,18 @@ public class CodeGenerationManager {
 	
 	public boolean generateBWCodeForComponent(){
 		
-		CodeGenerationXsdHandler xsdHandler = new CodeGenerationXsdHandler(this.log);
-		
 		boolean isSuccessful;
+		
+		if (new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+componentName).exists() == true){
+			
+			log.append("Source code for " + componentName + " already exists. \n");
+		    log.setCaretPosition(log.getDocument().getLength());
+		    
+		    return isSuccessful = false;
+			
+		}
+		
+		CodeGenerationXsdHandler xsdHandler = new CodeGenerationXsdHandler(this.log);
 		
 		Service[] services = xsdHandler.getServicesFromXsd(componentName);
 		
@@ -103,8 +112,10 @@ public class CodeGenerationManager {
 								
 							}	
 							
+							
 							//Create the final destination path for the code
 							File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
+							
 							
 							//Make the necessary directories for the file if file is not a directory
 							
