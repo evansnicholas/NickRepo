@@ -7,16 +7,30 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 
+import javax.swing.JTextArea;
+
 import nl.ziggo.icc.tooling.codegenerator.entity.Service;
 
 public class CodeGenerationXsdHandler {
 
+	JTextArea log;
+	
+	public CodeGenerationXsdHandler(JTextArea log){
+		
+		this.log = log;
+		
+	}
 	
 	
 	public Service[] getServicesFromXsd(String componentName){
 		
-		File xsdFileDirectory = new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\Schema");
+		File xsdFileDirectory = new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\Schemas");
+		
+		log.append("Search for xsd in folder : "+xsdFileDirectory.getPath()+"\n");
+    	log.setCaretPosition(log.getDocument().getLength());
+		
 		Service[] services;
+		
 		File[] xsds;
 		
 		if (!xsdFileDirectory.exists()){
@@ -26,14 +40,22 @@ public class CodeGenerationXsdHandler {
 		}else{
 			
 			xsds = xsdFileDirectory.listFiles();
+			
 			int numberOfServices = xsds.length;
+			
 			services = new Service[numberOfServices];
+			
+			log.append("Found "+numberOfServices+" xsd(s).\n");
+	    	log.setCaretPosition(log.getDocument().getLength());
 			
 		}
 		
 		int serviceNumber = 0;
 		
 		for (File xsd : xsds){
+			
+			log.append("Found xsd: "+xsd.getName()+"\n");
+	    	log.setCaretPosition(log.getDocument().getLength());
 			
 			Service service = new Service(componentName);
 			

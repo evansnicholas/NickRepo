@@ -27,13 +27,26 @@ public class CodeGenerationManager {
 	
 	public boolean generateBWCodeForComponent(){
 		
-		CodeGenerationXsdHandler xsdHandler = new CodeGenerationXsdHandler();
+		CodeGenerationXsdHandler xsdHandler = new CodeGenerationXsdHandler(this.log);
 		
 		boolean isSuccessful;
+		
 		Service[] services = xsdHandler.getServicesFromXsd(componentName);
+		
+		if (services == null){
+			
+			log.append("Found no xsds for component "+componentName+".\n");
+	    	log.setCaretPosition(log.getDocument().getLength());
+	    	
+	    	return isSuccessful = false;
+		}
+		
 		File[] templates = CodeGeneratorConfiguration.templatesLocation.listFiles();
 		
 			for (Service service : services){
+				
+				log.append("Processing xsd: "+service.getOperationName()+"\n");
+		    	log.setCaretPosition(log.getDocument().getLength());
 		
 				HashMap<String, String> serviceInformation = service.getServiceInformation();
 				

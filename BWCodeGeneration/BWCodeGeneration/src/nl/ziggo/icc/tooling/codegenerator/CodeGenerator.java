@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -246,6 +247,7 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	configFileLoader.addComponentNameToPastComponentsList(componentName);
         	
         	//Unit Tests
+        	/*
         	ArrayList<String[]> termsToBeReplaced = new ArrayList<String[]>();
         	String[] pair = {"[~]OPERATION_NAME[~]", "TcyManageBillingForTracy"};
         	String[] pair2 = {"[~]OPERATION_VERSION[~]", "2"};
@@ -259,12 +261,22 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	termsToBeReplaced.add(pair4);
         	termsToBeReplaced.add(pair5);
         	termsToBeReplaced.add(pair6);
+        	*/
+        	
         	
         	//Utilities u = new Utilities(log);
         	//u.searchReplaceAndWriteToTempFolder(termsToBeReplaced, new File("C:\\Users\\iggo\\Desktop\\Test\\Templates"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"));
         	//u.copyFilesFromTempFolderBasedOnName(new File("C:\\Users\\iggo\\Desktop\\Test\\adpTracy"), new File("C:\\Users\\iggo\\Desktop\\Test\\Temp"), termsToBeReplaced);
         	
-        	CodeGenerationManager cgManager = new CodeGenerationManager(componentName, this.log, termsToBeReplaced);
+        	HashMap<String, String> placeHolders = new HashMap<String, String>();
+        	placeHolders.put("cdmEntity", "[~]CDM_ENTITY[~]");
+        	placeHolders.put("operationName", "[~]OPERATION_NAME[~]");
+        	placeHolders.put("operationVersion", "[~]OPERATION_VERSION[~]");
+        	placeHolders.put("adapterName", "[~]ADAPTER_NAME[~]");
+        	placeHolders.put("adapterNameLowerCase", "[~]ADAPTER_NAME_LOWERCASE[~]");
+        	placeHolders.put("operationNameLowerCase", "[~]OPERATION_NAME_LOWERCASE[~]");
+        	
+        	CodeGenerationManager cgManager = new CodeGenerationManager(componentName, this.log, placeHolders);
         	Boolean terminationStatus = cgManager.generateBWCodeForComponent();
         	
         	if (terminationStatus == true){
