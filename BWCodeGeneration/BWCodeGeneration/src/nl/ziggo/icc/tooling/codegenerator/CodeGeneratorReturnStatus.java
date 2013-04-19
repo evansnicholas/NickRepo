@@ -2,6 +2,6 @@ package nl.ziggo.icc.tooling.codegenerator;
 
 public enum CodeGeneratorReturnStatus {
 
-	SUCCESS, ERROR, NOXSD
+	SUCCESS, ERROR, NOCOMPONENT
 	
 }

@@ -2,6 +2,7 @@ package nl.ziggo.icc.tooling.codegenerator;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import javax.swing.JTextArea;
 
 import nl.ziggo.icc.tooling.codegenerator.entity.Service;
+import nl.ziggo.icc.tooling.codegenerator.exceptions.NoXsdsFoundException;
 
 public class CodeGenerationXsdHandler {
 
@@ -22,7 +24,7 @@ public class CodeGenerationXsdHandler {
 	}
 	
 	
-	public Service[] getServicesFromXsd(String componentName){
+	public Service[] getServicesFromXsdDirectory(String componentName) throws FileNotFoundException, NoXsdsFoundException{
 		
 		File xsdFileDirectory = new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\Schemas");
 		
@@ -35,13 +37,17 @@ public class CodeGenerationXsdHandler {
 		
 		if (!xsdFileDirectory.exists()){
 			
-			return null;
+			throw new FileNotFoundException();
 			
 		}else{
 			
 			xsds = xsdFileDirectory.listFiles();
 			
 			int numberOfServices = xsds.length;
+			
+			if (numberOfServices == 0){
+				throw new NoXsdsFoundException();
+			}
 			
 			services = new Service[numberOfServices];
 			
@@ -112,5 +118,6 @@ public class CodeGenerationXsdHandler {
 		return null;
 		
 	}
+
 	
 }

@@ -2,3 +2,5 @@ adpBreezz
 adpCramer
 adpTracy
 adpExpertDesk
+adpMSDynamics
+adpTest

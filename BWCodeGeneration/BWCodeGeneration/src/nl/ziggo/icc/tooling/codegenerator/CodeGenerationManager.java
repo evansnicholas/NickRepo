@@ -1,5 +1,6 @@
 package nl.ziggo.icc.tooling.codegenerator;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +8,9 @@ import java.util.HashMap;
 import javax.swing.JTextArea;
 
 import nl.ziggo.icc.tooling.codegenerator.entity.Service;
+import nl.ziggo.icc.tooling.codegenerator.exceptions.CodeGeneratorException;
+import nl.ziggo.icc.tooling.codegenerator.exceptions.ComponentNotFoundException;
+import nl.ziggo.icc.tooling.codegenerator.exceptions.NoXsdsFoundException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -25,167 +29,214 @@ public class CodeGenerationManager {
 		
 	}
 	
-	public CodeGeneratorReturnStatus generateBWCodeForComponent(){
+	public void generateBWCodeForComponent() throws CodeGeneratorException{
 		
-		CodeGeneratorReturnStatus returnStatus;
+		if (!new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName).exists()){
+			
+			throw new ComponentNotFoundException();
+			
+		}
 		
 		if (new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+componentName).exists() == true){
 			
 			log.append("Source code for " + componentName + " already exists. \n");
 		    log.setCaretPosition(log.getDocument().getLength());
 		    
-		    return returnStatus = CodeGeneratorReturnStatus.ERROR;
+		    throw new CodeGeneratorException();
 			
 		}
 		
 		CodeGenerationXsdHandler xsdHandler = new CodeGenerationXsdHandler(this.log);
 		
-		Service[] services = xsdHandler.getServicesFromXsd(componentName);
+		try{
 		
-		if (services == null){
+			Service[] services = xsdHandler.getServicesFromXsdDirectory(componentName);
+		
+			File[] templates = CodeGeneratorConfiguration.templatesLocation.listFiles();
 			
-			log.append("Found no xsds for component "+componentName+".\n");
-	    	log.setCaretPosition(log.getDocument().getLength());
-	    	
-	    	return returnStatus = CodeGeneratorReturnStatus.ERROR;
-		}
-		
-		File[] templates = CodeGeneratorConfiguration.templatesLocation.listFiles();
-		
-			for (Service service : services){
-				
-				log.append("Processing xsd: "+service.getOperationName()+"\n");
-		    	log.setCaretPosition(log.getDocument().getLength());
-		
-		    	//Copy the xsd to the correct location
-		    	
-		    	try{
-		    		
-		    		FileUtils.copyFile(new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\Schemas\\"+service.getOperationName()+".xsd"), new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\src\\"+this.componentName+"\\Functionalities\\"+service.getOperationName()+"_"+service.getOperationVersion()+"\\Resources\\InternalResources\\Schemas\\"+service.getOperationName()+".xsd"));
-		    	
-		    	}catch(IOException e){
-		    		
-		    		log.append(e.getMessage()+"\n");
+				for (Service service : services){
+					
+					log.append("Processing xsd: "+service.getOperationName()+"\n");
 			    	log.setCaretPosition(log.getDocument().getLength());
-			    	return returnStatus = CodeGeneratorReturnStatus.ERROR;
-		    		
-		    	}
-		    		
-		    		
-				HashMap<String, String> serviceInformation = service.getServiceInformation();
-				
-				for (File template : templates){
+			
+			    	//Copy the xsd to the correct location
+			    	
+			    	try{
+			    		
+			    		FileUtils.copyFile(new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\Schemas\\"+service.getOperationName()+".xsd"), new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\src\\"+this.componentName+"\\Functionalities\\"+service.getOperationName()+"_"+service.getOperationVersion()+"\\Resources\\InternalResources\\Schemas\\"+service.getOperationName()+".xsd"));
+			    	
+			    	}catch(IOException e){
+			    		
+			    		log.append(e.getMessage()+"\n");
+				    	log.setCaretPosition(log.getDocument().getLength());
+				    	
+				    	throw new CodeGeneratorException();
+			    		
+			    	}
+			    		
+			    		
+					HashMap<String, String> serviceInformation = service.getServiceInformation();
 					
-					boolean isFolderName = false;
-					
-					if (template.isDirectory() == true){
+					for (File template : templates){
 						
-						continue;
+						boolean isFolderName = false;
 						
-					}else{	
-						
-						
-						try{
-						
-							//Get template as string
-							String fileContents = FileUtils.readFileToString(template);
+						if (template.isDirectory() == true){
 							
-							//Replace all necessary values
-							for (String key : placeHolders.keySet()){
+							continue;
 							
-								fileContents = fileContents.replaceAll(placeHolders.get(key), serviceInformation.get(key));
+						}else{	
 							
-							}
 							
-							//Performing parsing of template Name
-							String partialDestinationPath = "";
-							String templateName = template.getName();
+							try{
 							
-							if (templateName.endsWith(".directory")){
+								//Get template as string
+								String fileContents = FileUtils.readFileToString(template);
 								
-								isFolderName = true;
-								
-								int lastDotIndex = templateName.lastIndexOf(".");
-								
-								templateName = templateName.substring(0, lastDotIndex);
-								
-							}
-		
-							String[] templateNameParts = templateName.split("-");
-							
-							
-							
-							for (String part : templateNameParts){
-								
+								//Replace all necessary values
 								for (String key : placeHolders.keySet()){
+								
+									fileContents = fileContents.replaceAll(placeHolders.get(key), serviceInformation.get(key));
+								
+								}
+								
+								//Performing parsing of template Name
+								String partialDestinationPath = "";
+								String templateName = template.getName();
+								
+								if (templateName.endsWith(".directory")){
 									
-									part = part.replaceAll(placeHolders.get(key), serviceInformation.get(key));
+									isFolderName = true;
+									
+									int lastDotIndex = templateName.lastIndexOf(".");
+									
+									templateName = templateName.substring(0, lastDotIndex);
+									
+								}
+			
+								String[] templateNameParts = templateName.split("-");
+								
+								
+								
+								for (String part : templateNameParts){
+									
+									for (String key : placeHolders.keySet()){
+										
+										part = part.replaceAll(placeHolders.get(key), serviceInformation.get(key));
+										
+									}
+									
+									partialDestinationPath = partialDestinationPath+"\\"+part;
+									
+								}	
+								
+								
+								//Create the final destination path for the code
+								File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
+								
+								
+								//Make the necessary directories for the file if file is not a directory
+								
+								if (isFolderName == false){
+									
+									finalGeneratedFile.getParentFile().mkdirs();
+									
+								}else{
+									
+									finalGeneratedFile.mkdirs();
 									
 								}
 								
-								partialDestinationPath = partialDestinationPath+"\\"+part;
 								
-							}	
-							
-							
-							//Create the final destination path for the code
-							File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
-							
-							
-							//Make the necessary directories for the file if file is not a directory
-							
-							if (isFolderName == false){
+								//Write the string to a file in the correct SVN location.
+								if (isFolderName == false){
+									
+									FileUtils.writeStringToFile(finalGeneratedFile, fileContents);
 								
-								finalGeneratedFile.getParentFile().mkdirs();
+								}
 								
-							}else{
-								
-								finalGeneratedFile.mkdirs();
-								
-							}
-							
-							
-							//Write the string to a file in the correct SVN location.
-							if (isFolderName == false){
-								
-								FileUtils.writeStringToFile(finalGeneratedFile, fileContents);
-							
-							}
-							
-							//Log what has been done
-							log.append("Created: " + finalGeneratedFile.getAbsolutePath() + "\n");
-						    log.setCaretPosition(log.getDocument().getLength());
-							
-							
-						}catch(IOException e ){
-							
-							try{
-								
-								FileUtils.cleanDirectory(new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName));
-								
-							}catch(IOException e2){
-								
-								log.append("An error occurred: " + e2.getMessage() + "  Code generation aborted.\n");
+								//Log what has been done
+								log.append("Created: " + finalGeneratedFile.getAbsolutePath() + "\n");
 							    log.setCaretPosition(log.getDocument().getLength());
-							    return returnStatus = CodeGeneratorReturnStatus.ERROR;
 								
+								
+							}catch(IOException e ){
+								
+								try{
+									
+									FileUtils.cleanDirectory(new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName));
+									
+								}catch(IOException e2){
+									
+									log.append("An error occurred: " + e2.getMessage() + "  Code generation aborted.\n");
+								    log.setCaretPosition(log.getDocument().getLength());
+								    
+								    throw new CodeGeneratorException();
+									
+									
+								}
+								
+								log.append("An error occurred: " + e.getMessage() + "  Code generation aborted.\n");
+							    log.setCaretPosition(log.getDocument().getLength());
+							  
+							    throw new CodeGeneratorException();
 								
 							}
-							
-							log.append("An error occurred: " + e.getMessage() + "  Code generation aborted.\n");
-						    log.setCaretPosition(log.getDocument().getLength());
-						  
-						    return returnStatus = CodeGeneratorReturnStatus.ERROR;
-							
-						}
+						
+						}			
 					
-					}			
-				
+					}
+					
 				}
-				
-			}
 		
-			return returnStatus = CodeGeneratorReturnStatus.SUCCESS;
+		}catch(FileNotFoundException fileNotFoundException){	
+		
+			log.append("Found no xsd folder for component "+componentName+".\n");
+			log.setCaretPosition(log.getDocument().getLength());
+    	
+			throw new CodeGeneratorException();
+			
+		}catch(NoXsdsFoundException noXsdsFoundException){
+			
+			log.append(noXsdsFoundException.getMessage() + "\n");
+			log.setCaretPosition(log.getDocument().getLength());
+    	
+			throw new CodeGeneratorException();
+			
+		}
+		
 	}
 	
+	public void generateInitialSvnStructure(){
+		
+		File svnFolderStructureTemplateLocation = new File(CodeGeneratorConfiguration.templatesLocation.toPath()+"\\SVN");
+		
+		File[] templates = svnFolderStructureTemplateLocation.listFiles();
+		
+		
+		for (File template : templates){
+			
+			if (template.isDirectory()){
+				continue;
+			}
+			
+			//Performing parsing of template Name
+			String templateName = template.getName();
+			int lastDotIndex = templateName.lastIndexOf(".");			
+			templateName = templateName.substring(0, lastDotIndex);
+			templateName = templateName.replaceAll("[-]","\\\\");
+			
+			//Create the final File
+			File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\"+templateName);
+			
+			//Create the folder on the file system
+			finalGeneratedFile.mkdirs();
+			
+			//Log what has been done
+			log.append("Created: " + finalGeneratedFile.getAbsolutePath() + "\n");
+		    log.setCaretPosition(log.getDocument().getLength());
+			
+		}
+		
+	}
 }

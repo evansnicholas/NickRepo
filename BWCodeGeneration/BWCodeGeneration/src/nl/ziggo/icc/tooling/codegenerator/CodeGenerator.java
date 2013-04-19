@@ -26,6 +26,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -40,6 +41,9 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
+
+import nl.ziggo.icc.tooling.codegenerator.exceptions.CodeGeneratorException;
+import nl.ziggo.icc.tooling.codegenerator.exceptions.ComponentNotFoundException;
 
 
 public class CodeGenerator extends JPanel implements ActionListener{
@@ -273,22 +277,39 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	placeHolders.put("operationNameLowerCase", "[~]OPERATION_NAME_LOWERCASE[~]");
         	
         	CodeGenerationManager cgManager = new CodeGenerationManager(componentName, this.log, placeHolders);
-        	CodeGeneratorReturnStatus returnStatus = cgManager.generateBWCodeForComponent();
         	
-        	if (returnStatus == CodeGeneratorReturnStatus.SUCCESS){
+        	try{
+        	
+        		cgManager.generateBWCodeForComponent();
         		
-	        	log.append("Code generation terminated successfully."+newline);
+        		log.append("Code generation terminated successfully."+newline);
 	        	log.setCaretPosition(log.getDocument().getLength());
-	        	
-        	}else if (returnStatus == CodeGeneratorReturnStatus.ERROR){
+        	
+        	}catch(ComponentNotFoundException componentNotFoundException){
         		
-        		log.append("Code generation was not successful and was aborted."+newline);
-	        	log.setCaretPosition(log.getDocument().getLength());
-	        	
+        		if (JOptionPane.showConfirmDialog(null, "Component was not found in your local SVN directory.  Do you want to create an SVN structure for this component?", "New Component", 
+        				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
+        			    == JOptionPane.YES_OPTION){
+        			
+        			cgManager.generateInitialSvnStructure();
+        			
+        			log.append("An SVN structure was created for "+ componentName+ "."+ newline);
+        			log.setCaretPosition(log.getDocument().getLength());
+        			
+        		}
+        	
+        		
+        	}catch(CodeGeneratorException codeGeneratorException){
+        				
+        				log.append(codeGeneratorException.getMessage()+newline);
+        	        	log.setCaretPosition(log.getDocument().getLength());
+        				
         	}
-        	
+        		
         }
-	}
+        	
+    }
+	
 	
 	private static void createAndShowGUI() {
         //Create and set up the window.
