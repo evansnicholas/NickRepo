@@ -273,14 +273,14 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	placeHolders.put("operationNameLowerCase", "[~]OPERATION_NAME_LOWERCASE[~]");
         	
         	CodeGenerationManager cgManager = new CodeGenerationManager(componentName, this.log, placeHolders);
-        	Boolean terminationStatus = cgManager.generateBWCodeForComponent();
+        	CodeGeneratorReturnStatus returnStatus = cgManager.generateBWCodeForComponent();
         	
-        	if (terminationStatus == true){
+        	if (returnStatus == CodeGeneratorReturnStatus.SUCCESS){
         		
 	        	log.append("Code generation terminated successfully."+newline);
 	        	log.setCaretPosition(log.getDocument().getLength());
 	        	
-        	}else{
+        	}else if (returnStatus == CodeGeneratorReturnStatus.ERROR){
         		
         		log.append("Code generation was not successful and was aborted."+newline);
 	        	log.setCaretPosition(log.getDocument().getLength());
