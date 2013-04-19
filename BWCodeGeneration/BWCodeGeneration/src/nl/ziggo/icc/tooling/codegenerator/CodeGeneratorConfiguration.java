@@ -120,6 +120,15 @@ public class CodeGeneratorConfiguration {
 		    			
 		    			int equalsPosition = line.indexOf("=");
 		    			svnComponentsFile = new File(line.substring(equalsPosition+1, line.length()).trim());
+		    			
+		    			if (!svnComponentsFile.exists()){
+		    				
+		    				log.append("ERROR: The configured SVN components location "+svnComponentsFile.getPath() + " was not found. \n");
+			    		    log.setCaretPosition(log.getDocument().getLength());
+			    		    return;
+		    				
+		    			}
+		    			
 		    			log.append("Configured SVN components location is: "+svnComponentsFile.getPath() + "\n");
 		    		    log.setCaretPosition(log.getDocument().getLength());
 		    		    		    		
@@ -129,6 +138,16 @@ public class CodeGeneratorConfiguration {
 		    			
 		    			int equalsPosition = line.indexOf("=");
 		    			templatesLocation = new File(line.substring(equalsPosition+1, line.length()).trim());
+		    			
+		    			if (!templatesLocation.exists()){
+		    				
+		    				log.append("ERROR: The configured templates location "+templatesLocation.getPath() + " was not found. \n");
+			    		    log.setCaretPosition(log.getDocument().getLength());
+			    		    return;
+		    				
+		    			}
+		    			
+		    			
 		    			log.append("Configured templates directory location is: "+templatesLocation.getPath() + "\n");
 		    		    log.setCaretPosition(log.getDocument().getLength());
 		    		    		    		

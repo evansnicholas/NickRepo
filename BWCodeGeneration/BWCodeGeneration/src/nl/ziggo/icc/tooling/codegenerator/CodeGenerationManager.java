@@ -25,16 +25,16 @@ public class CodeGenerationManager {
 		
 	}
 	
-	public boolean generateBWCodeForComponent(){
+	public CodeGeneratorReturnStatus generateBWCodeForComponent(){
 		
-		boolean isSuccessful;
+		CodeGeneratorReturnStatus returnStatus;
 		
 		if (new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+componentName).exists() == true){
 			
 			log.append("Source code for " + componentName + " already exists. \n");
 		    log.setCaretPosition(log.getDocument().getLength());
 		    
-		    return isSuccessful = false;
+		    return returnStatus = CodeGeneratorReturnStatus.ERROR;
 			
 		}
 		
@@ -47,7 +47,7 @@ public class CodeGenerationManager {
 			log.append("Found no xsds for component "+componentName+".\n");
 	    	log.setCaretPosition(log.getDocument().getLength());
 	    	
-	    	return isSuccessful = false;
+	    	return returnStatus = CodeGeneratorReturnStatus.ERROR;
 		}
 		
 		File[] templates = CodeGeneratorConfiguration.templatesLocation.listFiles();
@@ -57,6 +57,21 @@ public class CodeGenerationManager {
 				log.append("Processing xsd: "+service.getOperationName()+"\n");
 		    	log.setCaretPosition(log.getDocument().getLength());
 		
+		    	//Copy the xsd to the correct location
+		    	
+		    	try{
+		    		
+		    		FileUtils.copyFile(new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\Schemas\\"+service.getOperationName()+".xsd"), new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\src\\"+this.componentName+"\\Functionalities\\"+service.getOperationName()+"_"+service.getOperationVersion()+"\\Resources\\InternalResources\\Schemas\\"+service.getOperationName()+".xsd"));
+		    	
+		    	}catch(IOException e){
+		    		
+		    		log.append(e.getMessage()+"\n");
+			    	log.setCaretPosition(log.getDocument().getLength());
+			    	return returnStatus = CodeGeneratorReturnStatus.ERROR;
+		    		
+		    	}
+		    		
+		    		
 				HashMap<String, String> serviceInformation = service.getServiceInformation();
 				
 				for (File template : templates){
@@ -152,7 +167,7 @@ public class CodeGenerationManager {
 								
 								log.append("An error occurred: " + e2.getMessage() + "  Code generation aborted.\n");
 							    log.setCaretPosition(log.getDocument().getLength());
-							    return isSuccessful = false;
+							    return returnStatus = CodeGeneratorReturnStatus.ERROR;
 								
 								
 							}
@@ -160,7 +175,7 @@ public class CodeGenerationManager {
 							log.append("An error occurred: " + e.getMessage() + "  Code generation aborted.\n");
 						    log.setCaretPosition(log.getDocument().getLength());
 						  
-						    return isSuccessful = false;
+						    return returnStatus = CodeGeneratorReturnStatus.ERROR;
 							
 						}
 					
@@ -170,8 +185,7 @@ public class CodeGenerationManager {
 				
 			}
 		
-		return isSuccessful = true;
+			return returnStatus = CodeGeneratorReturnStatus.SUCCESS;
 	}
-	
 	
 }

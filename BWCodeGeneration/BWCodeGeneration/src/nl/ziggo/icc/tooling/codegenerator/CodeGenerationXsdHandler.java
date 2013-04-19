@@ -26,7 +26,7 @@ public class CodeGenerationXsdHandler {
 		
 		File xsdFileDirectory = new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\Schemas");
 		
-		log.append("Search for xsd in folder : "+xsdFileDirectory.getPath()+"\n");
+		log.append("Searching for xsd in folder : "+xsdFileDirectory.getPath()+"\n");
     	log.setCaretPosition(log.getDocument().getLength());
 		
 		Service[] services;
