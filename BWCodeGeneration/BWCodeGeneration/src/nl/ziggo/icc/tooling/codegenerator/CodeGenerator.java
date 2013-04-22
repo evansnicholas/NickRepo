@@ -51,12 +51,12 @@ public class CodeGenerator extends JPanel implements ActionListener{
 	protected static final String componentFieldString = "Component Name"; 
 	protected static final String ftfString = "JFormattedTextField";
 	private String newline = "\n";
-	JTextArea log;
-	JButton generateCodeButton;
-	JTextField componentTextField;
-	JComboBox componentsList;
-	String[] previousComponents;
-	CodeGeneratorConfiguration configFileLoader;
+	private JTextArea log;
+	private JButton generateCodeButton;
+	private JTextField componentTextField;
+	private JComboBox componentsList;
+	private String[] previousComponents;
+	private CodeGeneratorConfiguration configFileLoader;
 	
 	 protected JLabel actionLabel;
 	 protected JLabel logLabel;
@@ -282,7 +282,7 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	
         		cgManager.generateBWCodeForComponent();
         		
-        		log.append("Code generation terminated successfully."+newline);
+        		log.append("Code generation terminated successfully."+ "\n");
 	        	log.setCaretPosition(log.getDocument().getLength());
         	
         	}catch(ComponentNotFoundException componentNotFoundException){
@@ -296,6 +296,11 @@ public class CodeGenerator extends JPanel implements ActionListener{
         			log.append("An SVN structure was created for "+ componentName+ "."+ newline);
         			log.setCaretPosition(log.getDocument().getLength());
         			
+        		}else{
+        			
+        			log.append("An SVN structure was not created for "+ componentName+ "."+ newline);
+        			log.setCaretPosition(log.getDocument().getLength());
+        			     			
         		}
         	
         		
