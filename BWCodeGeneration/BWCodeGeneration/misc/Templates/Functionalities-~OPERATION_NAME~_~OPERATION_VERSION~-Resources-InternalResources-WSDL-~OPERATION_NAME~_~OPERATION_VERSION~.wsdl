@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" xmlns:tns="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~">
-    <import location="../Schemas/~OPERATION_NAME~.xsd" namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema"/>
+    <import location="../Schemas/~OPERATION_NAME~_~OPERATION_VERSION~.xsd" namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema"/>
     <message name="~OPERATION_NAME~Request">
         <part element="ns:Request" name="~OPERATION_NAME~Request"/>
     </message>

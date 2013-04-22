@@ -278,4 +278,105 @@ public class CodeGenerationManager {
 		}
 		
 	}
+	
+	public void createEmptyBWTemplate(Service[] services) throws CodeGeneratorException{
+		
+		File[] templates = CodeGeneratorConfiguration.templatesLocation.listFiles();
+		
+		for (Service service : services){
+			
+			log.append("Making empty template for: "+service.getOperationName()+"_"+service.getOperationVersion()+"\n");
+	    	log.setCaretPosition(log.getDocument().getLength());
+	    	   		
+			HashMap<String, String> serviceInformation = service.getServiceInformation();
+			
+			for (File template : templates){
+				
+				boolean isFolderName = false;
+				
+				if (template.isDirectory() == true){
+					
+					continue;
+					
+				}else if (template.getName().contains("vcrepo")){
+					
+					try{
+						//Get template as string
+						String fileContents = FileUtils.readFileToString(template);
+						fileContents = fileContents.replaceAll("[~]ADAPTER_NAME[~]", service.getAdapterName());
+						File vcrepoFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+componentName+"\\"+"vcrepo.dat");
+						
+						vcrepoFile.getParentFile().mkdirs();
+						
+						FileUtils.writeStringToFile(vcrepoFile, fileContents);
+											
+					}catch(IOException ioException){
+						
+						log.append(ioException.getMessage());
+						log.setCaretPosition(log.getDocument().getLength());
+						
+						throw new CodeGeneratorException();
+						
+					}
+				
+				}else{	
+						
+						//Performing parsing of template Name
+						String partialDestinationPath = "";
+						String templateName = template.getName();
+						
+						if (templateName.endsWith(".directory")){
+							
+							isFolderName = true;
+							
+							int lastDotIndex = templateName.lastIndexOf(".");
+							
+							templateName = templateName.substring(0, lastDotIndex);
+							
+						}
+	
+						String[] templateNameParts = templateName.split("-");						
+						
+						for (String part : templateNameParts){
+							
+							for (String key : placeHolders.keySet()){
+								
+								part = part.replaceAll(placeHolders.get(key), serviceInformation.get(key));
+								
+							}
+							
+							partialDestinationPath = partialDestinationPath+"\\"+part;
+							
+						}	
+						
+						
+						//Create the final destination path for the code
+						File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
+						
+						
+						//Make the necessary directories for the file if file is not a directory
+						
+						if (isFolderName == false){
+							
+							finalGeneratedFile.getParentFile().mkdirs();
+							
+						}else{
+							
+							finalGeneratedFile.mkdirs();
+							
+						}
+						
+						
+						//Log what has been done
+						log.append("Created: " + finalGeneratedFile.getAbsolutePath() + "\n");
+					    log.setCaretPosition(log.getDocument().getLength());
+				
+				}			
+			
+			}
+			
+		}
+		
+		
+	}
 }

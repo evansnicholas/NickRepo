@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.ziggo.nl/Integration/ESB/Generic/CSL/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ZiggoCustom="java://com.tibco.psg.bwutils.BWCustomFunctions" xmlns:pfx3="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" xmlns:pfx2="http://www.ziggo.nl/Integration/ESB/Generic/CMM/2.0" >
     <xsd:import namespace="http://www.ziggo.nl/Integration/ESB/Generic/CMM/2.0" schemaLocation="/CMM/Resources/Schemas/cmm_2.xsd"/>
-    <xsd:import namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" schemaLocation="/Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Resources/InternalResources/Schemas/~OPERATION_NAME~.xsd"/>
+    <xsd:import namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" schemaLocation="/Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Resources/InternalResources/Schemas/~OPERATION_NAME~_~OPERATION_VERSION~.xsd"/>
     <pd:name>Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Implementation/~OPERATION_NAME~_~OPERATION_VERSION~_impl/~OPERATION_NAME~_~OPERATION_VERSION~_impl.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startType ref="pfx3:Request"/>

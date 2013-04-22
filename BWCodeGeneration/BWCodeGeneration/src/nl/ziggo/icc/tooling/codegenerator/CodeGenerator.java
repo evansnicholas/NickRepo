@@ -42,6 +42,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import nl.ziggo.icc.tooling.codegenerator.entity.Service;
 import nl.ziggo.icc.tooling.codegenerator.exceptions.CodeGeneratorException;
 import nl.ziggo.icc.tooling.codegenerator.exceptions.ComponentNotFoundException;
 
@@ -287,15 +288,79 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	
         	}catch(ComponentNotFoundException componentNotFoundException){
         		
-        		if (JOptionPane.showConfirmDialog(null, "Component was not found in your local SVN directory.  Do you want to create an SVN structure for this component?", "New Component", 
-        				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
-        			    == JOptionPane.YES_OPTION){
+        		String[] possibleChoices = {"Create SVN structure", "Create SVN structure and empty BW Template"}; 
+        		
+        		String userChoice = (String) JOptionPane.showInputDialog(null, "Component was not found in your local SVN directory.  What would you like to do?", "New Component",JOptionPane.QUESTION_MESSAGE,
+ 				       null, possibleChoices, possibleChoices[0]);
+        		
+        		if (userChoice == possibleChoices[0]){
         			
         			cgManager.generateInitialSvnStructure();
         			
         			log.append("An SVN structure was created for "+ componentName+ "."+ newline);
         			log.setCaretPosition(log.getDocument().getLength());
         			
+        		}else if(userChoice == possibleChoices[1]){
+        		
+        			JTextField userInput = new JTextField(50);
+        			JPanel userInputPanel = new JPanel();
+        			userInputPanel.add(new JLabel("Service names and versions:"));
+        			userInputPanel.add(userInput);
+        			
+        		    int userServiceInfoInput = JOptionPane.showConfirmDialog(null, userInputPanel, "Enter the names and versions of the services you want to create an empty BW project for.  Syntax is: ServiceName1 ServiceVersion1 ServiceName2 ServiceVersion2 etc...", JOptionPane.OK_CANCEL_OPTION);
+        			
+        		    if (userServiceInfoInput == JOptionPane.OK_OPTION){
+        		    	
+        		    	String userInputString = userInput.getText();
+        		    	String[] serviceNamesAndVersions = userInputString.split(" ");
+        		    	
+        		    	if (serviceNamesAndVersions.length % 2 != 0){
+        		    		
+        		    		log.append("Wrong service information was entered");
+        		    		log.setCaretPosition(log.getDocument().getLength());
+        		    		return;
+        		    		
+        		    	}
+        		    	
+        		    	Service[] services = new Service[serviceNamesAndVersions.length/2]; 
+        		    	
+        		    	for (int i = 0; i < serviceNamesAndVersions.length; i += 2){
+        		    		
+        		    		Service service = new Service(componentName);
+        		    		service.setOperationName(serviceNamesAndVersions[i]);
+        		    		service.setOperationVersion(serviceNamesAndVersions[i+1]);
+        		    		
+        		    		services[i/2] = service;
+        		    		
+        		    	}
+        		    	
+        		    	cgManager.generateInitialSvnStructure();
+            			
+        		    	try{
+        		    		
+        		    		cgManager.createEmptyBWTemplate(services);
+        		    		
+        		    	}catch(CodeGeneratorException codeGeneratorException){
+        		    		
+        		    		log.append(codeGeneratorException.getMessage());
+        		    		log.setCaretPosition(log.getDocument().getLength());
+        		    		
+        		    		return;
+        		    		
+        		    	}
+        		    	
+        		    	log.append("An SVN structure and empty BW template was created for "+ componentName+ "."+ newline);
+            			log.setCaretPosition(log.getDocument().getLength());
+        		    	
+        		    }else{
+        		    	
+        		    	log.append("Neither an SVN structure nor a BW template was created for "+ componentName+ "."+ newline);
+            			log.setCaretPosition(log.getDocument().getLength());
+        		    	
+        		    }
+        		    
+        			
+        		
         		}else{
         			
         			log.append("An SVN structure was not created for "+ componentName+ "."+ newline);

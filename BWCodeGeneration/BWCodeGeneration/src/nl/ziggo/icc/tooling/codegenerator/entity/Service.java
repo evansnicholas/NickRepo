@@ -40,6 +40,10 @@ public class Service {
 		return this.cdmEntity;
 	}
 	
+	public String getAdapterName(){
+		return this.adapterName;
+	}
+	
 	public HashMap<String, String> getServiceInformation(){
 		
 		HashMap<String, String> serviceInformation = new HashMap<String, String>();
