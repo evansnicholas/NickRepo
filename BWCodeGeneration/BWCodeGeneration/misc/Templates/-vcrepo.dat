@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <repository version="2" commitCount="1">
   <instanceInfo>
-    <instanceInfoProperty name="displayName" value="Adp.ExpertDesk"/>
+    <instanceInfoProperty name="displayName" value="~ADAPTER_NAME~"/>
     <instanceInfoProperty name="version" value="5.7.0"/>
     <instanceInfoProperty name="rootDir" value="."/>
     <instanceInfoProperty name="instanceType" value="localFile"/>

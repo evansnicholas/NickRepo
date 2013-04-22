@@ -282,7 +282,7 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	
         		cgManager.generateBWCodeForComponent();
         		
-        		log.append("Code generation terminated successfully."+ "\n");
+        		log.append("Code generation terminated successfully."+ "\n" + "\n");
 	        	log.setCaretPosition(log.getDocument().getLength());
         	
         	}catch(ComponentNotFoundException componentNotFoundException){

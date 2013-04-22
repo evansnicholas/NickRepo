@@ -3,17 +3,21 @@ package nl.ziggo.icc.tooling.codegenerator;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 
 import nl.ziggo.icc.tooling.codegenerator.entity.Service;
+import nl.ziggo.icc.tooling.codegenerator.exceptions.CodeGeneratorException;
 import nl.ziggo.icc.tooling.codegenerator.exceptions.NoXsdsFoundException;
 
 public class CodeGenerationXsdHandler {
@@ -27,7 +31,7 @@ public class CodeGenerationXsdHandler {
 	}
 	
 	
-	public Service[] getServicesFromXsdDirectory(String componentName, boolean sourceCodeExists) throws FileNotFoundException, NoXsdsFoundException{
+	public Service[] getServicesFromXsdDirectory(String componentName, boolean sourceCodeExists) throws FileNotFoundException, NoXsdsFoundException, CodeGeneratorException{
 		
 		File[] xsds;
 		Service[] services;
@@ -46,7 +50,14 @@ public class CodeGenerationXsdHandler {
 			
 		}else{
 			
-			xsds = xsdFileDirectory.listFiles();			
+			xsds = xsdFileDirectory.listFiles(new FilenameFilter() {
+				
+				public boolean accept(File dir, String name) {
+					return name.endsWith(".xsd");
+				}
+				
+			});		
+			
 			numberOfxsds = xsds.length;
 			
 			if (numberOfxsds == 0){
@@ -100,14 +111,42 @@ public class CodeGenerationXsdHandler {
 							log.setCaretPosition(log.getDocument().getLength());
 							
 						}else{
-							log.append("Xsd "+xsd.toPath()+" is newer than the version currently used in BW.  This xsd will be skipped. \n");
+							log.append("Xsd "+xsd.toPath()+" is newer than the version currently used in BW. \n");
 							log.setCaretPosition(log.getDocument().getLength());
+							
+							if (JOptionPane.showConfirmDialog(null, "The SVN xsd for "+xsdNameWithoutExtension+" is more recent than the one currently used in BW.  Do you want to overwrite the code belonging to the old xsd? If you do this, all code belonging to the old xsd will be lost.", "Newer XSD found.", 
+			        				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
+			        			    == JOptionPane.YES_OPTION){
+			        			
+			        			log.append("Overwriting old code for "+ xsd.getName()+ "."+ "\n");
+			        			log.setCaretPosition(log.getDocument().getLength());
+			        			
+			        			try{
+			        				FileUtils.deleteDirectory(new File(componentSourceDirectory.toPath()+"\\Functionalities\\"+xsdNameWithoutExtension));
+			        			}catch(IOException iOException){
+			        				
+			        				log.append(iOException.getMessage());
+				        			log.setCaretPosition(log.getDocument().getLength());
+			        				
+				        			throw new CodeGeneratorException();
+			        			}  
+			        			
+			        			xsdsForGeneration.add(xsd);
+			        			
+			        		}else{
+			        			
+			        			log.append("Code for "+ xsd.getName()+ " will not be overwritten." + "\n");
+			        			log.setCaretPosition(log.getDocument().getLength());
+			        			continue;
+			        			     			
+			        		}
 							
 						}
 						
 					}			
 				}
 			}
+			
 		}else{
 			
 			//Source code does not exist do code for all xsds needs to be generated.

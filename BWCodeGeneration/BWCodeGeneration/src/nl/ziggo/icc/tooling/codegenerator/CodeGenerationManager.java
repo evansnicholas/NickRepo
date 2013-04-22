@@ -96,7 +96,6 @@ public class CodeGenerationManager {
 			    log.setCaretPosition(log.getDocument().getLength());
 			    
 			    throw new CodeGeneratorException();
-		    	
 		    }
 			
 		}
