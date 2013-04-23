@@ -4,3 +4,4 @@ adpTracy
 adpExpertDesk
 adpMSDynamics
 adpTest
+adpClever

@@ -37,7 +37,7 @@ public class CodeGenerationManager {
 		
 	}
 	
-	public void generateBWCodeForComponent() throws CodeGeneratorException{
+	public void generateBWCodeForComponent() throws CodeGeneratorException, NoXsdsFoundException{
 		
 		Service[] services = null;
 		
@@ -65,13 +65,6 @@ public class CodeGenerationManager {
 		    	log.append(fileNotFoundException.getMessage());
 			    log.setCaretPosition(log.getDocument().getLength());
 		    	
-		    }catch(NoXsdsFoundException noXsdsFoundException){
-		    	
-		    	log.append(noXsdsFoundException.getMessage());
-			    log.setCaretPosition(log.getDocument().getLength());
-			    
-			    throw new CodeGeneratorException();
-		    	
 		    }
 		    	
 		}else{
@@ -90,12 +83,6 @@ public class CodeGenerationManager {
 			    
 			    throw new CodeGeneratorException();
 		    	
-		    }catch(NoXsdsFoundException noXsdsFoundException){
-		    	
-		    	log.append(noXsdsFoundException.getMessage());
-			    log.setCaretPosition(log.getDocument().getLength());
-			    
-			    throw new CodeGeneratorException();
 		    }
 			
 		}

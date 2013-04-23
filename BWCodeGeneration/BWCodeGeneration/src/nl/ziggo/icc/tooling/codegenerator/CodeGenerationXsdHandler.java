@@ -114,22 +114,12 @@ public class CodeGenerationXsdHandler {
 							log.append("Xsd "+xsd.toPath()+" is newer than the version currently used in BW. \n");
 							log.setCaretPosition(log.getDocument().getLength());
 							
-							if (JOptionPane.showConfirmDialog(null, "The SVN xsd for "+xsdNameWithoutExtension+" is more recent than the one currently used in BW.  Do you want to overwrite the code belonging to the old xsd? If you do this, all code belonging to the old xsd will be lost.", "Newer XSD found.", 
+							if (JOptionPane.showConfirmDialog(null, "The SVN xsd for "+xsdNameWithoutExtension+" is more recent than the one currently used in BW.  Do you want to overwrite the code belonging to the old xsd? If you do this, most of the existing code will be overwritten (user added resources such as JDBC connections will not be affected).", "Newer XSD found.", 
 			        				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
 			        			    == JOptionPane.YES_OPTION){
 			        			
 			        			log.append("Overwriting old code for "+ xsd.getName()+ "."+ "\n");
-			        			log.setCaretPosition(log.getDocument().getLength());
-			        			
-			        			try{
-			        				FileUtils.deleteDirectory(new File(componentSourceDirectory.toPath()+"\\Functionalities\\"+xsdNameWithoutExtension));
-			        			}catch(IOException iOException){
-			        				
-			        				log.append(iOException.getMessage());
-				        			log.setCaretPosition(log.getDocument().getLength());
-			        				
-				        			throw new CodeGeneratorException();
-			        			}  
+			        			log.setCaretPosition(log.getDocument().getLength()); 
 			        			
 			        			xsdsForGeneration.add(xsd);
 			        			

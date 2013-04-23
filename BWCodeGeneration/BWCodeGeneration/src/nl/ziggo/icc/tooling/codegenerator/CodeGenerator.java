@@ -45,6 +45,7 @@ import javax.swing.text.StyledDocument;
 import nl.ziggo.icc.tooling.codegenerator.entity.Service;
 import nl.ziggo.icc.tooling.codegenerator.exceptions.CodeGeneratorException;
 import nl.ziggo.icc.tooling.codegenerator.exceptions.ComponentNotFoundException;
+import nl.ziggo.icc.tooling.codegenerator.exceptions.NoXsdsFoundException;
 
 
 public class CodeGenerator extends JPanel implements ActionListener{
@@ -368,7 +369,74 @@ public class CodeGenerator extends JPanel implements ActionListener{
         			     			
         		}
         	
+        	}catch(NoXsdsFoundException noXsdsFoundException){
+        	
+        		String[] possibleChoices = {"Create empty BW Template"}; 
         		
+        		String userChoice = (String) JOptionPane.showInputDialog(null, "No new xsds were found.  What would you like to do?", "New Component", JOptionPane.QUESTION_MESSAGE,
+ 				       null, possibleChoices, possibleChoices[0]);
+        		
+        		if (userChoice == possibleChoices[0]){
+        			
+        			JTextField userInput = new JTextField(50);
+        			JPanel userInputPanel = new JPanel();
+        			userInputPanel.add(new JLabel("Service names and versions:"));
+        			userInputPanel.add(userInput);
+        			
+        		    int userServiceInfoInput = JOptionPane.showConfirmDialog(null, userInputPanel, "Enter the names and versions of the services you want to create an empty BW project for.  Syntax is: ServiceName1 ServiceVersion1 ServiceName2 ServiceVersion2 etc...", JOptionPane.OK_CANCEL_OPTION);
+        			
+        		    if (userServiceInfoInput == JOptionPane.OK_OPTION){
+        		    	
+        		    	String userInputString = userInput.getText();
+        		    	String[] serviceNamesAndVersions = userInputString.split(" ");
+        		    	
+        		    	if (serviceNamesAndVersions.length % 2 != 0){
+        		    		
+        		    		log.append("Wrong service information was entered");
+        		    		log.setCaretPosition(log.getDocument().getLength());
+        		    		return;
+        		    		
+        		    	}
+        		    	
+        		    	Service[] services = new Service[serviceNamesAndVersions.length/2]; 
+        		    	
+        		    	for (int i = 0; i < serviceNamesAndVersions.length; i += 2){
+        		    		
+        		    		Service service = new Service(componentName);
+        		    		service.setOperationName(serviceNamesAndVersions[i]);
+        		    		service.setOperationVersion(serviceNamesAndVersions[i+1]);
+        		    		
+        		    		services[i/2] = service;
+        		    		
+        		    	}
+        		    	
+        		    	try{
+        		    		
+        		    		cgManager.createEmptyBWTemplate(services);
+        		    		
+        		    	}catch(CodeGeneratorException codeGeneratorException){
+        		    		
+        		    		log.append(codeGeneratorException.getMessage());
+        		    		log.setCaretPosition(log.getDocument().getLength());
+        		    		
+        		    		return;
+        		    		
+        		    	}
+        		    	
+        		    	log.append("Empty BW templates were created for "+ componentName+ "."+ newline);
+            			log.setCaretPosition(log.getDocument().getLength());
+        		    	
+        		    }else{
+        		    	
+        		    	log.append("Neither an SVN structure nor a BW template was created for "+ componentName+ "."+ newline);
+            			log.setCaretPosition(log.getDocument().getLength());
+        		    	
+        		    }
+        			
+        		}
+        	
+        	
+        	
         	}catch(CodeGeneratorException codeGeneratorException){
         				
         				log.append(codeGeneratorException.getMessage()+newline);
