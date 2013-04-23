@@ -1,6 +1,7 @@
 package nl.ziggo.icc.tooling.codegenerator;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -13,12 +14,16 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -55,10 +60,12 @@ public class CodeGenerator extends JPanel implements ActionListener{
 	private String newline = "\n";
 	private JTextArea log;
 	private JButton generateCodeButton;
+	private JButton generateServiceInvocationButton;
 	private JTextField componentTextField;
 	private JComboBox componentsList;
 	private String[] previousComponents;
 	private CodeGeneratorConfiguration configFileLoader;
+	private static HashMap<String, String> placeHolders;
 	
 	 protected JLabel actionLabel;
 	 protected JLabel logLabel;
@@ -104,6 +111,14 @@ public class CodeGenerator extends JPanel implements ActionListener{
         //Create a generate button
         generateCodeButton = new JButton("Generate!");
         generateCodeButton.addActionListener(this);
+        generateCodeButton.setPreferredSize(new Dimension(200, 40));
+        generateCodeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        //Create a button for generating service invocations
+        generateServiceInvocationButton = new JButton("Generate service invocations.");
+        generateServiceInvocationButton.addActionListener(this);
+        generateServiceInvocationButton.setPreferredSize(new Dimension(200, 40));
+        generateServiceInvocationButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         //Lay out the text controls and the labels for the input panel.
         JPanel textControlsPane = new JPanel();
@@ -155,8 +170,27 @@ public class CodeGenerator extends JPanel implements ActionListener{
         
         //Create a panel for the buttons
         JPanel buttonPane = new JPanel();
+        GroupLayout groupLayout = new GroupLayout(buttonPane);
+        buttonPane.setLayout(groupLayout);
         
-        buttonPane.add(generateCodeButton);
+        groupLayout.setAutoCreateGaps(true);
+        
+        groupLayout.setVerticalGroup(
+        		   groupLayout.createSequentialGroup()
+        		      .addComponent(generateCodeButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        		      .addComponent(generateServiceInvocationButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        		);
+        
+       groupLayout.setHorizontalGroup(
+        		   groupLayout.createSequentialGroup()
+        		   	.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        		           .addComponent(generateCodeButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        		           .addComponent(generateServiceInvocationButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        		));  
+        		   
+        //buttonPane.add(generateCodeButton);
+        //buttonPane.add(Box.createRigidArea(new Dimension(0,10)));
+        //buttonPane.add(generateServiceInvocationButton);
         
         buttonPane.setBorder(
                 BorderFactory.createCompoundBorder(
@@ -246,8 +280,6 @@ public class CodeGenerator extends JPanel implements ActionListener{
 	    } 
 	 
 	public void actionPerformed(ActionEvent e) {
-
-		String prefix = "You typed \"";
         
 		/*if (componentFieldString.equals(e.getActionCommand())) {
             
@@ -269,16 +301,8 @@ public class CodeGenerator extends JPanel implements ActionListener{
         	log.setCaretPosition(log.getDocument().getLength());
         	
         	configFileLoader.addComponentNameToPastComponentsList(componentName);
-        	
-        	HashMap<String, String> placeHolders = new HashMap<String, String>();
-        	placeHolders.put("cdmEntity", "[~]CDM_ENTITY[~]");
-        	placeHolders.put("operationName", "[~]OPERATION_NAME[~]");
-        	placeHolders.put("operationVersion", "[~]OPERATION_VERSION[~]");
-        	placeHolders.put("adapterName", "[~]ADAPTER_NAME[~]");
-        	placeHolders.put("adapterNameLowerCase", "[~]ADAPTER_NAME_LOWERCASE[~]");
-        	placeHolders.put("operationNameLowerCase", "[~]OPERATION_NAME_LOWERCASE[~]");
-        	
-        	CodeGenerationManager cgManager = new CodeGenerationManager(componentName, this.log, placeHolders);
+        	 	
+        	CodeGenerationManager cgManager = new CodeGenerationManager(componentName, this.log, CodeGenerator.placeHolders);
         	
         	try{
         	
@@ -444,8 +468,33 @@ public class CodeGenerator extends JPanel implements ActionListener{
         				
         	}
         		
-        }
+        }else if(e.getSource() == generateServiceInvocationButton){
         	
+        	String componentName = componentsList.getSelectedItem().toString();
+ 	
+        	log.append("Generating service invocations for "+componentName+"..."+newline);
+        	log.setCaretPosition(log.getDocument().getLength());
+        	
+        	CodeGenerationManager cgManager = new CodeGenerationManager(componentName, this.log, CodeGenerator.placeHolders);
+        	
+        	try{
+        		
+        		cgManager.generateServiceInvocations();
+        	
+        	}catch(FileNotFoundException fileNotFoundException){
+        		
+        		log.append(fileNotFoundException.getMessage() + newline + "Service Configurations were not successfully generated" + newline);
+            	log.setCaretPosition(log.getDocument().getLength());
+        		
+        	}catch(CodeGeneratorException codeGeneratorException){
+        		
+        		log.append(codeGeneratorException.getMessage() + newline);
+            	log.setCaretPosition(log.getDocument().getLength());
+        		
+        	}
+        	
+        }
+    	
     }
 	
 	
@@ -464,6 +513,15 @@ public class CodeGenerator extends JPanel implements ActionListener{
     }
 	
 	public static void main(String[] args) {
+		
+		placeHolders = new HashMap<String, String>();
+    	placeHolders.put("cdmEntity", "[~]CDM_ENTITY[~]");
+    	placeHolders.put("operationName", "[~]OPERATION_NAME[~]");
+    	placeHolders.put("operationVersion", "[~]OPERATION_VERSION[~]");
+    	placeHolders.put("adapterName", "[~]ADAPTER_NAME[~]");
+    	placeHolders.put("adapterNameLowerCase", "[~]ADAPTER_NAME_LOWERCASE[~]");
+    	placeHolders.put("operationNameLowerCase", "[~]OPERATION_NAME_LOWERCASE[~]");
+    	
         //Schedule a job for the event dispatching thread:
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(new Runnable() {

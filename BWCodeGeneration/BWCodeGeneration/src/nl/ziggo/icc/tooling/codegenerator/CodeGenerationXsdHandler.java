@@ -31,11 +31,11 @@ public class CodeGenerationXsdHandler {
 	}
 	
 	
-	public Service[] getServicesFromXsdDirectory(String componentName, boolean sourceCodeExists) throws FileNotFoundException, NoXsdsFoundException, CodeGeneratorException{
+	public Service[] getServicesFromXsdDirectory(String componentName, boolean sourceCodeExists, File xsdDirectory) throws FileNotFoundException, NoXsdsFoundException, CodeGeneratorException{
 		
 		File[] xsds;
 		Service[] services;
-		File xsdFileDirectory = new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\");
+		File xsdFileDirectory = xsdDirectory; 
 		int numberOfxsds = 0;
 		LastModifiedFileComparator fileComparer = new LastModifiedFileComparator();
 		File componentSourceDirectory = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+componentName+"\\trunk\\src\\"+componentName);
@@ -139,7 +139,7 @@ public class CodeGenerationXsdHandler {
 			
 		}else{
 			
-			//Source code does not exist do code for all xsds needs to be generated.
+			//Source code does not exist so get service information needs to be gathered from all xsds (also the case if generating service invocation.
 			for (File xsd : xsds){
 				
 				xsdsForGeneration.add(xsd);

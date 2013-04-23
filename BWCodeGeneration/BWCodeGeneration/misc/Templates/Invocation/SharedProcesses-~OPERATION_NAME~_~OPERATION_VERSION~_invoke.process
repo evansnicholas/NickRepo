@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:pfx13="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/jms" xmlns:pfx12="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx6="http://www.ziggo.nl/Integration/ESB/Generic/CMM/2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns6="http://www.ziggo.nl/Integration/ESB/Generic/CSL/1.0" xmlns:pfx="http://www.ziggo.nl/Integration/ESB/Generic/CMM/1.0" xmlns:ns7="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions" xmlns:ns8="http://xmlns.tibco.com/encodings/mime" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions" xmlns:ns4="http://www.tibco.com/pe/EngineTypes" xmlns:ns3="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.ziggo.nl/Integration/ESB/Generic/CMM/2.0" schemaLocation="/CMM/Resources/Schemas/cmm_2.xsd"/>
+    <xsd:import namespace="http://www.ziggo.nl/Integration/ESB/Generic/CSL/1.0" schemaLocation="/Common/Resources/Schemas/csl_internal.xsd"/>
+    <xsd:import namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" schemaLocation="/SharedResources/Schemas/~OPERATION_NAME~_~OPERATION_VERSION~.xsd"/>
+    <wsdl:import namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/jms" location="/SharedResources/WSDL/~OPERATION_NAME~_~OPERATION_VERSION~_jms.wsdl"/>
+    <pd:name>SharedProcesses/~OPERATION_NAME~_~OPERATION_VERSION~_invoke.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx12:Request"/>
+    <pd:startX>27</pd:startX>
+    <pd:startY>65</pd:startY>
+    <pd:returnBindings>
+        <pfx12:Response>
+            <xsl:copy-of select="$SOAPRequestReply/outputMessage/pfx12:Response/pfx6:header"/>
+            <xsl:copy-of select="$SOAPRequestReply/outputMessage/pfx12:Response/pfx6:resultStatus"/>
+            <xsl:copy-of select="$SOAPRequestReply/outputMessage/pfx12:Response/pfx12:body"/>
+        </pfx12:Response>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType ref="pfx12:Response"/>
+    <pd:endX>887</pd:endX>
+    <pd:endY>68</pd:endY>
+    <pd:errorSchemas>
+        <FunctionalErrorException ref="ns6:FunctionalErrorException"/>
+    </pd:errorSchemas>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1337766052360</pd:targetNamespace>
+    <pd:activity name="LogExternalRequest">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>322</pd:x>
+        <pd:y>66</pd:y>
+        <config>
+            <processName>/Logging/Services/LogRawData.process</processName>
+        </config>
+        <pd:inputBindings>
+            <logRawData_input>
+                <ns6:severity>
+                    <xsl:value-of select="$_globalVariables/ns3:GlobalVariables/CSL/Logging/Severity/DEBUG"/>
+                </ns6:severity>
+                <ns6:message>
+                    <xsl:value-of select="'Sent Request'"/>
+                </ns6:message>
+                <ns6:rawData>
+                    <xsl:value-of select="tib:render-xml( $Start/pfx12:Request)"/>
+                </ns6:rawData>
+            </logRawData_input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogExternalResponse">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>710</pd:x>
+        <pd:y>65</pd:y>
+        <config>
+            <processName>/Logging/Services/LogRawData.process</processName>
+        </config>
+        <pd:inputBindings>
+            <logRawData_input>
+                <ns6:severity>
+                    <xsl:value-of select="$_globalVariables/ns3:GlobalVariables/CSL/Logging/Severity/DEBUG"/>
+                </ns6:severity>
+                <ns6:message>
+                    <xsl:value-of select="'Received Response'"/>
+                </ns6:message>
+                <ns6:rawData>
+                    <xsl:value-of select="tib:render-xml($SOAPRequestReply/outputMessage/pfx12:Response)"/>
+                </ns6:rawData>
+            </logRawData_input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SOAPRequestReply">
+        <pd:type>com.tibco.plugin.soap.SOAPSendReceiveActivity</pd:type>
+        <pd:resourceType>ae.activities.SOAPSendReceiveUI</pd:resourceType>
+        <pd:x>496</pd:x>
+        <pd:y>72</pd:y>
+        <config>
+            <timeout>5</timeout>
+            <soapAttachmentStyle>SwA</soapAttachmentStyle>
+            <service>pfx13:~OPERATION_NAME~_~OPERATION_VERSION~_interface</service>
+            <servicePort>~OPERATION_NAME~_~OPERATION_VERSION~.Endpoint</servicePort>
+            <operation>~OPERATION_NAME~_~OPERATION_VERSION~</operation>
+            <soapAction>~OPERATION_NAME~_~OPERATION_VERSION~</soapAction>
+            <sharedChannels>
+                <jmsChannel>
+                    <NamingURL>%%CSL/Common/Connections/ESB_JMS/JNDIURL%%</NamingURL>
+                    <NamingInitialContextFactory>com.tibco.tibjms.naming.TibjmsInitialContextFactory</NamingInitialContextFactory>
+                    <NamingPrincipal>%%CSL/Common/Connections/ESB_JMS/JNDIUserName%%</NamingPrincipal>
+                    <NamingCredential>%%CSL/Common/Connections/ESB_JMS/JNDIPassword%%</NamingCredential>
+                    <ConnectionFactory>QueueConnectionFactory</ConnectionFactory>
+                    <JMSTo>icc.~ADAPTER_NAME_LOWERCASE~.~OPERATION_NAME_LOWERCASE~.~OPERATION_VERSION~.queue</JMSTo>
+                    <JMSMessageType>Text</JMSMessageType>
+                    <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                    <JMSPriority>4</JMSPriority>
+                    <JMSTimeToLive>0</JMSTimeToLive>
+                    <JMSUserName>%%CSL/Common/Connections/ESB_JMS/UserName%%</JMSUserName>
+                    <JMSPassword>%%CSL/Common/Connections/ESB_JMS/Password%%</JMSPassword>
+                    <NamingProperties/>
+                </jmsChannel>
+            </sharedChannels>
+        </config>
+        <pd:inputBindings>
+            <inputMessage>
+                <pfx12:Request>
+                    <xsl:copy-of select="$ConstructRequestHeader/constructRequestHeader_output/pfx6:header"/>
+                    <xsl:copy-of select="$Start/pfx12:Request/pfx12:body"/>
+                </pfx12:Request>
+            </inputMessage>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ConstructRequestHeader">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>171</pd:x>
+        <pd:y>66</pd:y>
+        <config>
+            <processName>/CMM/Services/ConstructRequestHeader.process</processName>
+        </config>
+        <pd:inputBindings>
+            <constructRequestHeader_input>
+                <xsl:copy-of select="$Start/pfx12:Request/pfx6:header"/>
+                <ns6:targetService>
+                    <pfx6:serviceName>
+                        <xsl:value-of select="'~OPERATION_NAME~'"/>
+                    </pfx6:serviceName>
+                    <pfx6:serviceVersion>
+                        <xsl:value-of select="'~OPERATION_VERSION~'"/>
+                    </pfx6:serviceVersion>
+                    <pfx6:messageType>
+                        <xsl:value-of select="$_globalVariables/ns3:GlobalVariables/CSL/Common/MessageType/REQUEST"/>
+                    </pfx6:messageType>
+                </ns6:targetService>
+            </constructRequestHeader_input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>ConstructRequestHeader</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogExternalResponse</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogExternalRequest</pd:from>
+        <pd:to>SOAPRequestReply</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SOAPRequestReply</pd:from>
+        <pd:to>LogExternalResponse</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ConstructRequestHeader</pd:from>
+        <pd:to>LogExternalRequest</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

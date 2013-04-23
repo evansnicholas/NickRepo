@@ -44,7 +44,7 @@ public class Service {
 		return this.adapterName;
 	}
 	
-	public HashMap<String, String> getServiceInformation(){
+	public HashMap<String, String> initializeAndGetServiceInformation(){
 		
 		HashMap<String, String> serviceInformation = new HashMap<String, String>();
 		

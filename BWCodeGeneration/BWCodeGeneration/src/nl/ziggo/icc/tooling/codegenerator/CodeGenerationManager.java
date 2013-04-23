@@ -1,6 +1,7 @@
 package nl.ziggo.icc.tooling.codegenerator;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public class CodeGenerationManager {
 		    
 		    try{	
 		    	
-		    	services = xsdHandler.getServicesFromXsdDirectory(componentName, true);
+		    	services = xsdHandler.getServicesFromXsdDirectory(componentName, true, new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\"));
 		    	
 		    }catch(FileNotFoundException fileNotFoundException){
 		    	
@@ -74,7 +75,7 @@ public class CodeGenerationManager {
 		    
 		    try{	
 		    	
-		    	services = xsdHandler.getServicesFromXsdDirectory(componentName, false);
+		    	services = xsdHandler.getServicesFromXsdDirectory(componentName, false, new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\"));
 		    	
 		    }catch(FileNotFoundException fileNotFoundException){
 		    	
@@ -117,7 +118,7 @@ public class CodeGenerationManager {
 	    	}
 	    		
 	    		
-			HashMap<String, String> serviceInformation = service.getServiceInformation();
+			HashMap<String, String> serviceInformation = service.initializeAndGetServiceInformation();
 			
 			for (File template : templates){
 				
@@ -275,7 +276,7 @@ public class CodeGenerationManager {
 			log.append("Making empty template for: "+service.getOperationName()+"_"+service.getOperationVersion()+"\n");
 	    	log.setCaretPosition(log.getDocument().getLength());
 	    	   		
-			HashMap<String, String> serviceInformation = service.getServiceInformation();
+			HashMap<String, String> serviceInformation = service.initializeAndGetServiceInformation();
 			
 			for (File template : templates){
 				
@@ -363,7 +364,127 @@ public class CodeGenerationManager {
 			}
 			
 		}
-		
-		
+				
 	}
+	
+	public void generateServiceInvocations() throws FileNotFoundException, CodeGeneratorException{
+		
+		File sharedResourcesSchemasLocation = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\SharedResources\\Schemas");
+		File sharedResourcesWsdlsLocation = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\SharedResources\\WSDL");
+		Service[] servicesToBeInvoked = null;
+		File serviceInvocationTemplatesLocation = new File(CodeGeneratorConfiguration.templatesLocation+"\\Invocation");
+		
+		if (!sharedResourcesSchemasLocation.exists() || !sharedResourcesWsdlsLocation.exists()){
+			
+			throw new FileNotFoundException();
+			
+		}
+		
+		try{
+			
+			servicesToBeInvoked = xsdHandler.getServicesFromXsdDirectory(this.componentName, false, sharedResourcesSchemasLocation);
+			
+		}catch(FileNotFoundException fileNotFoundException){
+			
+			throw new FileNotFoundException();
+			
+		}catch(NoXsdsFoundException noXsdsFoundException){
+			
+			log.append(noXsdsFoundException.getMessage());
+		    log.setCaretPosition(log.getDocument().getLength());
+		    log.append("No service invocation processes were generated." + "\n");
+		    log.setCaretPosition(log.getDocument().getLength());
+		    
+		    throw new CodeGeneratorException();
+			
+		}
+		
+		for (Service service : servicesToBeInvoked){
+			
+			log.append("Processing invoked service: "+service.getOperationName()+"_"+service.getOperationVersion()+"\n");
+	    	log.setCaretPosition(log.getDocument().getLength());
+	    		
+			HashMap<String, String> serviceInformation = service.initializeAndGetServiceInformation();
+			
+			File[] serviceInvocationTemplates = serviceInvocationTemplatesLocation.listFiles();
+			
+			for (File template : serviceInvocationTemplates){
+				
+				if (!new File(sharedResourcesWsdlsLocation.toPath()+"\\"+service.getOperationName()+"_"+service.getOperationVersion()+"_jms.wsdl").exists()){
+					
+					log.append("Error! WSDL "+service.getOperationName()+"_"+service.getOperationVersion()+"_jms.wsdl does not exist. \n");
+			    	log.setCaretPosition(log.getDocument().getLength());
+			    	throw new CodeGeneratorException();
+					
+				}
+				
+				if (template.isDirectory() == true){
+					
+					continue;
+					
+				}else{	
+					
+					
+					try{
+					
+						//Get template as string
+						String fileContents = FileUtils.readFileToString(template);
+						
+						//Replace all necessary values
+						for (String key : placeHolders.keySet()){
+						
+							fileContents = fileContents.replaceAll(placeHolders.get(key), serviceInformation.get(key));
+						
+						}
+						
+						//Performing parsing of template Name
+						String partialDestinationPath = "";
+						String templateName = template.getName();
+						String[] templateNameParts = templateName.split("-");
+												
+						for (String part : templateNameParts){
+							
+							for (String key : placeHolders.keySet()){
+								
+								part = part.replaceAll(placeHolders.get(key), serviceInformation.get(key));
+								
+							}
+							
+							partialDestinationPath = partialDestinationPath+"\\"+part;
+							
+						}	
+						
+						
+						//Create the final destination path for the code
+						File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
+						
+						
+						//Make the necessary directories for the file				
+						finalGeneratedFile.getParentFile().mkdirs();
+													
+						//Write the string to the file
+						FileUtils.writeStringToFile(finalGeneratedFile, fileContents);
+											
+						//Log what has been done
+						log.append("Created: " + finalGeneratedFile.getAbsolutePath() + "\n");
+					    log.setCaretPosition(log.getDocument().getLength());
+						
+						
+					}catch(IOException e){
+						
+						log.append(e.getMessage() + "\n");
+					    log.setCaretPosition(log.getDocument().getLength());
+					  
+					    throw new CodeGeneratorException();
+						
+					}
+				
+				}			
+			
+			}
+			
+		}
+				
+	}
+	
 }
