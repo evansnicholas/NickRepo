@@ -55,20 +55,19 @@ import nl.ziggo.icc.tooling.codegenerator.exceptions.NoXsdsFoundException;
 
 public class CodeGenerator extends JPanel implements ActionListener{
 
-	protected static final String componentFieldString = "Component Name"; 
-	protected static final String ftfString = "JFormattedTextField";
+	private String componentFieldString = "Component Name"; 
+	private String ftfString = "JFormattedTextField";
 	private String newline = "\n";
 	private JTextArea log;
 	private JButton generateCodeButton;
 	private JButton generateServiceInvocationButton;
 	private JTextField componentTextField;
-	private JComboBox componentsList;
+	private JComboBox<String> componentsList;
 	private String[] previousComponents;
 	private CodeGeneratorConfiguration configFileLoader;
 	private static HashMap<String, String> placeHolders;
-	
-	 protected JLabel actionLabel;
-	 protected JLabel logLabel;
+	private JLabel actionLabel;
+	private JLabel logLabel;
 	
 	 public CodeGenerator(){
 		 
@@ -96,7 +95,7 @@ public class CodeGenerator extends JPanel implements ActionListener{
 	    previousComponents = configFileLoader.getPastComponents();
 	    
 	    //Create an editable combo box
-	    componentsList = new JComboBox(previousComponents);
+	    componentsList = new JComboBox<String>(previousComponents);
 		componentsList.setEditable(true);
 		componentsList.addActionListener(this);
  
@@ -111,13 +110,13 @@ public class CodeGenerator extends JPanel implements ActionListener{
         //Create a generate button
         generateCodeButton = new JButton("Generate!");
         generateCodeButton.addActionListener(this);
-        generateCodeButton.setPreferredSize(new Dimension(200, 40));
+        generateCodeButton.setPreferredSize(new Dimension(200, 30));
         generateCodeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         //Create a button for generating service invocations
-        generateServiceInvocationButton = new JButton("Generate service invocations.");
+        generateServiceInvocationButton = new JButton("Generate service invocations");
         generateServiceInvocationButton.addActionListener(this);
-        generateServiceInvocationButton.setPreferredSize(new Dimension(200, 40));
+        generateServiceInvocationButton.setPreferredSize(new Dimension(200, 30));
         generateServiceInvocationButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         //Lay out the text controls and the labels for the input panel.
@@ -137,7 +136,8 @@ public class CodeGenerator extends JPanel implements ActionListener{
         //textConstraints.gridwidth = GridBagConstraints.REMAINDER; //last
         //textConstraints.anchor = GridBagConstraints.WEST;
         //textConstraints.weightx = 1.0;
-        textConstraints.fill = GridBagConstraints.BOTH;
+        textConstraints.anchor = GridBagConstraints.WEST;
+        //textConstraints.fill = GridBagConstraints.BOTH;
         textConstraints.gridx = 0;
         textConstraints.gridy = 0;
         //textControlsPane.add(actionLabel, textConstraints);
@@ -216,69 +216,6 @@ public class CodeGenerator extends JPanel implements ActionListener{
         add(buttonPane, BorderLayout.LINE_END);
     }
 	
-	 private void addLabelTextRows(JLabel[] labels, JTextField[] textFields, GridBagLayout gridbag, Container container) {
-		 
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.EAST;
-		int numLabels = labels.length;
-		
-		for (int i = 0; i < numLabels; i++) {
-			c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
-			c.fill = GridBagConstraints.NONE;      //reset to default
-			c.weightx = 0.0;                       //reset to default
-			container.add(labels[i], c);
-			
-			c.gridwidth = GridBagConstraints.REMAINDER;     //end row
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.weightx = 1.0;
-			container.add(textFields[i], c);
-		}
-	}
-	 
-	 private void addLabelJComboRows(JLabel[] labels, JComboBox[] JComboBox, GridBagLayout gridbag, Container container) {
-		 
-			GridBagConstraints c = new GridBagConstraints();
-			c.anchor = GridBagConstraints.EAST;
-			int numLabels = labels.length;
-			
-			for (int i = 0; i < numLabels; i++) {
-				c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
-				c.fill = GridBagConstraints.NONE;      //reset to default
-				c.weightx = 0.0;                       //reset to default
-				container.add(labels[i], c);
-				
-				c.gridwidth = GridBagConstraints.REMAINDER;     //end row
-				c.fill = GridBagConstraints.HORIZONTAL;
-				c.weightx = 1.0;
-				container.add(JComboBox[i], c);
-			}
-		}
-	 
-	 
-	
-	 
-	 protected void addStylesToDocument(StyledDocument doc) {
-	        //Initialize some styles.
-	        Style def = StyleContext.getDefaultStyleContext().
-	                        getStyle(StyleContext.DEFAULT_STYLE);
-	 
-	        Style regular = doc.addStyle("regular", def);
-	        StyleConstants.setFontFamily(def, "SansSerif");
-	 
-	        Style s = doc.addStyle("italic", regular);
-	        StyleConstants.setItalic(s, true);
-	 
-	        s = doc.addStyle("bold", regular);
-	        StyleConstants.setBold(s, true);
-	 
-	        s = doc.addStyle("small", regular);
-	        StyleConstants.setFontSize(s, 10);
-	 
-	        s = doc.addStyle("large", regular);
-	        StyleConstants.setFontSize(s, 16);
-	       
-	    } 
-	 
 	public void actionPerformed(ActionEvent e) {
         
 		/*if (componentFieldString.equals(e.getActionCommand())) {
