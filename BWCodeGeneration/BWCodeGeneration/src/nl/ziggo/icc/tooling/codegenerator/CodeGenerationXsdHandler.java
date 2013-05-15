@@ -38,7 +38,7 @@ public class CodeGenerationXsdHandler {
 		File xsdFileDirectory = xsdDirectory; 
 		int numberOfxsds = 0;
 		LastModifiedFileComparator fileComparer = new LastModifiedFileComparator();
-		File componentSourceDirectory = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+componentName+"\\trunk\\src\\"+componentName);
+		File componentSourceDirectory = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+componentName+"/trunk/src/"+componentName);
 		ArrayList<File> xsdsForGeneration = new ArrayList<File>();
 		
 		log.append("Searching for xsds in folder : "+xsdFileDirectory.getPath()+"\n");
@@ -80,7 +80,7 @@ public class CodeGenerationXsdHandler {
 				String xsdName = xsd.getName();
 				String xsdNameWithoutExtension = xsdName.substring(0, xsdName.lastIndexOf("."));
 				
-				File xsdInBW = new File(componentSourceDirectory.toPath()+"\\Functionalities\\"+xsdNameWithoutExtension+"\\Resources\\InternalResources\\Schemas\\"+xsdName);
+				File xsdInBW = new File(componentSourceDirectory.toPath()+"/Functionalities/"+xsdNameWithoutExtension+"/Resources/InternalResources/Schemas/"+xsdName);
 				
 				//check if xsd exists in project.  If exists check if it is the same as the one in SVN.
 				

@@ -13,8 +13,8 @@ import javax.swing.JTextArea;
 
 public class CodeGeneratorConfiguration {
 
-	private static File memoryFileLocation = new File("misc\\memory.txt");
-	private static File configFileLocation = new File("misc\\config.txt");
+	private static File memoryFileLocation = new File("misc/memory.txt");
+	private static File configFileLocation = new File("misc/config.txt");
 	private Charset charset; 
 	private JTextArea log;
 	public static File svnComponentsFile;

@@ -32,9 +32,9 @@ public class CodeGenerationManager {
 		this.log = log;
 		this.placeHolders = placeHolders;
 		this.xsdHandler = new CodeGenerationXsdHandler(this.log);
-		componentFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName);
-		componentSourceFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+componentName);
-		schemasLocation = new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource");
+		componentFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName);
+		componentSourceFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName+"/trunk/src/"+componentName);
+		schemasLocation = new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"/"+componentName+"/trunk/resource");
 		
 	}
 	
@@ -59,7 +59,7 @@ public class CodeGenerationManager {
 		    
 		    try{	
 		    	
-		    	services = xsdHandler.getServicesFromXsdDirectory(componentName, true, new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\"));
+		    	services = xsdHandler.getServicesFromXsdDirectory(componentName, true, new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"/"+componentName+"/trunk/resource/"));
 		    	
 		    }catch(FileNotFoundException fileNotFoundException){
 		    	
@@ -75,7 +75,7 @@ public class CodeGenerationManager {
 		    
 		    try{	
 		    	
-		    	services = xsdHandler.getServicesFromXsdDirectory(componentName, false, new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"\\"+componentName+"\\trunk\\resource\\"));
+		    	services = xsdHandler.getServicesFromXsdDirectory(componentName, false, new File(CodeGeneratorConfiguration.svnComponentsFile.toPath()+"/"+componentName+"/trunk/resource/"));
 		    	
 		    }catch(FileNotFoundException fileNotFoundException){
 		    	
@@ -106,7 +106,7 @@ public class CodeGenerationManager {
 	    	
 	    	try{
 	    		
-	    		FileUtils.copyFile(new File(schemasLocation.toPath()+"\\"+service.getOperationName()+"_"+service.getOperationVersion()+".xsd"), new File(componentSourceFile.toPath()+"\\Functionalities\\"+service.getOperationName()+"_"+service.getOperationVersion()+"\\Resources\\InternalResources\\Schemas\\"+service.getOperationName()+"_"+service.getOperationVersion()+".xsd"), true);
+	    		FileUtils.copyFile(new File(schemasLocation.toPath()+"/"+service.getOperationName()+"_"+service.getOperationVersion()+".xsd"), new File(componentSourceFile.toPath()+"/Functionalities/"+service.getOperationName()+"_"+service.getOperationVersion()+"/Resources/InternalResources/Schemas/"+service.getOperationName()+"_"+service.getOperationVersion()+".xsd"), true);
 	    	
 	    	}catch(IOException e){
 	    		
@@ -169,13 +169,13 @@ public class CodeGenerationManager {
 								
 							}
 							
-							partialDestinationPath = partialDestinationPath+"\\"+part;
+							partialDestinationPath = partialDestinationPath+"/"+part;
 							
 						}	
 						
 						
 						//Create the final destination path for the code
-						File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
+						File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName+"/trunk/src/"+this.componentName+"/"+partialDestinationPath);
 						
 						
 						//Make the necessary directories for the file if file is not a directory
@@ -207,7 +207,7 @@ public class CodeGenerationManager {
 						
 						try{
 							
-							FileUtils.cleanDirectory(new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName));
+							FileUtils.cleanDirectory(new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName+"/trunk/src/"+this.componentName));
 							
 						}catch(IOException e2){
 							
@@ -236,7 +236,7 @@ public class CodeGenerationManager {
 	
 	public void generateInitialSvnStructure(){
 		
-		File svnFolderStructureTemplateLocation = new File(CodeGeneratorConfiguration.templatesLocation.toPath()+"\\SVN");
+		File svnFolderStructureTemplateLocation = new File(CodeGeneratorConfiguration.templatesLocation.toPath()+"/SVN");
 		
 		File[] templates = svnFolderStructureTemplateLocation.listFiles();
 		
@@ -251,10 +251,10 @@ public class CodeGenerationManager {
 			String templateName = template.getName();
 			int lastDotIndex = templateName.lastIndexOf(".");			
 			templateName = templateName.substring(0, lastDotIndex);
-			templateName = templateName.replaceAll("[-]","\\\\");
+			templateName = templateName.replaceAll("[-]","/");
 			
 			//Create the final File
-			File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\"+templateName);
+			File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName+"/"+templateName);
 			
 			//Create the folder on the file system
 			finalGeneratedFile.mkdirs();
@@ -292,7 +292,7 @@ public class CodeGenerationManager {
 						//Get template as string
 						String fileContents = FileUtils.readFileToString(template);
 						fileContents = fileContents.replaceAll("[~]ADAPTER_NAME[~]", service.getAdapterName());
-						File vcrepoFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+componentName+"\\"+"vcrepo.dat");
+						File vcrepoFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName+"/trunk/src/"+componentName+"/"+"vcrepo.dat");
 						
 						vcrepoFile.getParentFile().mkdirs();
 						
@@ -333,13 +333,13 @@ public class CodeGenerationManager {
 								
 							}
 							
-							partialDestinationPath = partialDestinationPath+"\\"+part;
+							partialDestinationPath = partialDestinationPath+"/"+part;
 							
 						}	
 						
 						
 						//Create the final destination path for the code
-						File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
+						File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName+"/trunk/src/"+this.componentName+"/"+partialDestinationPath);
 						
 						
 						//Make the necessary directories for the file if file is not a directory
@@ -369,10 +369,10 @@ public class CodeGenerationManager {
 	
 	public void generateServiceInvocations() throws FileNotFoundException, CodeGeneratorException{
 		
-		File sharedResourcesSchemasLocation = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\SharedResources\\Schemas");
-		File sharedResourcesWsdlsLocation = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\SharedResources\\WSDL");
+		File sharedResourcesSchemasLocation = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName+"/trunk/src/"+this.componentName+"/SharedResources/Schemas");
+		File sharedResourcesWsdlsLocation = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"/trunk/src/"+this.componentName+"/SharedResources/WSDL");
 		Service[] servicesToBeInvoked = null;
-		File serviceInvocationTemplatesLocation = new File(CodeGeneratorConfiguration.templatesLocation+"\\Invocation");
+		File serviceInvocationTemplatesLocation = new File(CodeGeneratorConfiguration.templatesLocation+"/Invocation");
 		
 		if (!sharedResourcesSchemasLocation.exists() || !sharedResourcesWsdlsLocation.exists()){
 			
@@ -410,7 +410,7 @@ public class CodeGenerationManager {
 			
 			for (File template : serviceInvocationTemplates){
 				
-				if (!new File(sharedResourcesWsdlsLocation.toPath()+"\\"+service.getOperationName()+"_"+service.getOperationVersion()+"_jms.wsdl").exists()){
+				if (!new File(sharedResourcesWsdlsLocation.toPath()+"/"+service.getOperationName()+"_"+service.getOperationVersion()+"_jms.wsdl").exists()){
 					
 					log.append("Error! WSDL "+service.getOperationName()+"_"+service.getOperationVersion()+"_jms.wsdl does not exist. \n");
 			    	log.setCaretPosition(log.getDocument().getLength());
@@ -456,7 +456,7 @@ public class CodeGenerationManager {
 						
 						
 						//Create the final destination path for the code
-						File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"\\"+this.componentName+"\\trunk\\src\\"+this.componentName+"\\"+partialDestinationPath);
+						File finalGeneratedFile = new File(CodeGeneratorConfiguration.svnComponentsFile.getPath()+"/"+this.componentName+"/trunk/src/"+this.componentName+"/"+partialDestinationPath);
 						
 						
 						//Make the necessary directories for the file				
