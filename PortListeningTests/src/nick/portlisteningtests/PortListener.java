@@ -1,28 +1,31 @@
 package nick.portlisteningtests;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class PortListener {
+public class PortListener implements Runnable{
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-
+	
+	public void run(){
+			
 		try {
 			ServerSocket serverSocket = new ServerSocket(1995);
 			
 			Socket clientSocket = null;
+			DataOutputStream out = null;
+			
 			
 			try {
 				
 				clientSocket = serverSocket.accept();
+				
+				System.out.println("The connection was accepted");
 				
 				String inputLine;
 				String header = "";
@@ -30,15 +33,18 @@ public class PortListener {
 				
 				InputStreamReader inputStream = new InputStreamReader(clientSocket.getInputStream());
 				
-				BufferedReader bufferedReader = new BufferedReader(inputStream);
+				//BufferedReader bufferedReader = new BufferedReader(inputStream);
 				
-				while ((inputLine = bufferedReader.readLine()) != null){
+				
+				/*while ((inputLine = bufferedReader.readLine()) != null){
 					header = header + "\n" + inputLine;
 					headers.add(inputLine);
 						if (inputLine.startsWith("Content-Length: ")){
 							break;
 						}
-				}	
+				}*/	
+				
+				
 				
 				System.out.println(header);
 				
@@ -57,36 +63,51 @@ public class PortListener {
 				
 				System.out.println("");
 				
-				int expectedMessageLength = 500;
-				int numberOfCharsProcessed = 0;
 				boolean continueReading = true;
+				int listenTimeMillis = 1000;		
+				long startTime = System.currentTimeMillis();
+				int testCount = 0;
 				
 				while(continueReading){
 					
+					testCount++;
 					
-					char currentChar = (char) bufferedReader.read();	
-					System.out.print(currentChar);
-					requestContent.append(currentChar);
-					numberOfCharsProcessed++;
+					if (testCount == 10){
+						break;
+					}
+					int listenDuration = (int) (System.currentTimeMillis() - startTime);
 					
-					if (numberOfCharsProcessed == expectedMessageLength){
+					//System.out.print(listenDuration + " ");
+					
+					if (listenDuration > listenTimeMillis){
 						break;
 					}
 					
-					
+					char currentChar = (char) inputStream.read();
+					System.out.print(currentChar);
+					requestContent.append(currentChar);
 						
 				}
 					
-				
+				System.out.println("Now trying to send response");
 				System.out.print(requestContent);
 				
-				serverSocket.close();
+				out = new DataOutputStream(clientSocket.getOutputStream());
+				out.writeBytes("HTTP/1.1 200 OK\r\n");
+				out.writeBytes("Content-Type: text/html\r\n\r\n");
+				out.writeBytes("<html> <head> A Response from port sniffer </head> </html>");
+				
+				out.flush();
+				//bufferedReader.close();
 				clientSocket.close();
-				bufferedReader.close();
+				serverSocket.close();
+				
+				
 				
 			}catch(IOException e){
 				
-				System.out.println("Accept failed: 1997");
+				System.out.println("Accept failed: 1995");
+				System.out.println(e.getMessage());
 				System.exit(-1);
 			}
 			
@@ -97,7 +118,7 @@ public class PortListener {
 			
 		}
 		
-		
 	}
+	
 
 }
