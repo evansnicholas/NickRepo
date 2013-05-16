@@ -63,34 +63,65 @@ public class PortListener implements Runnable{
 				
 				System.out.println("");
 				
+				boolean isPostRequest = true;
 				boolean continueReading = true;
-				int listenTimeMillis = 1000;		
-				long startTime = System.currentTimeMillis();
-				int testCount = 0;
+				StringBuilder currentLine = new StringBuilder();
+				StringBuilder currentLineInt = new StringBuilder();
+				int currentByte;
+				char currentChar;
 				
 				while(continueReading){
 					
-					testCount++;
+					//char currentChar = (char) inputStream.read();
+					currentByte = inputStream.read();
+					//System.out.print(currentChar);
+					//requestContent.append(currentChar);
+					//currentLine.append('\\'+currentChar);
+					currentLineInt.append(currentByte);
+					//System.out.print(currentLineInt);
 					
-					if (testCount == 10){
-						break;
-					}
-					int listenDuration = (int) (System.currentTimeMillis() - startTime);
-					
-					//System.out.print(listenDuration + " ");
-					
-					if (listenDuration > listenTimeMillis){
-						break;
-					}
-					
-					char currentChar = (char) inputStream.read();
-					System.out.print(currentChar);
-					requestContent.append(currentChar);
+					if (currentLineInt.toString().equals("1310")){
 						
+						break;
+						
+					}else{
+						
+						
+						currentChar = (char) currentByte;
+						currentLine.append(currentChar);
+						
+					}
+					
+					
+					
+					if (currentLine.toString().contains("GET")){
+						
+						isPostRequest = false;
+						
+					}
+					
+					if (isPostRequest){
+					
+						if (currentLine.toString().contains("Content-Length: ")){
+							
+							System.out.println("Content Length detected!");
+							break;
+							
+						}
+						
+					}
+					
+					if (currentChar == '\n'){
+						System.out.println(currentLine);
+						currentLine.delete(0, currentLine.length());
+						currentLineInt.delete(0, currentLineInt.length());
+					}
+					
+					
 				}
 					
 				System.out.println("Now trying to send response");
-				System.out.print(requestContent);
+				//System.out.print(requestContent);
 				
 				out = new DataOutputStream(clientSocket.getOutputStream());
 				out.writeBytes("HTTP/1.1 200 OK\r\n");
@@ -108,13 +139,17 @@ public class PortListener implements Runnable{
 				
 				System.out.println("Accept failed: 1995");
 				System.out.println(e.getMessage());
-				System.exit(-1);
+			
+				clientSocket.close();
+				serverSocket.close();
+				
+				//System.exit(-1);
 			}
 			
 		}catch(IOException e){
 			
 			System.out.print("Could not listen on port: 1995");
-			System.exit(-1);
+			//System.exit(-1);
 			
 		}
 		
