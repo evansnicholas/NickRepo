@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" xmlns:tns="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" xmlns:tns="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~" xmlns:cmm="http://www.ziggo.nl/Integration/ESB/Generic/CMM/3.0">
     <import location="../Schemas/~OPERATION_NAME~_~OPERATION_VERSION~.xsd" namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema"/>
+    <import namespace="http://www.ziggo.nl/Integration/ESB/Generic/CMM/3.0" location="../../../../../CMM/Resources/Schemas/cmm_3.xsd"/>
     <message name="~OPERATION_NAME~Request">
         <part element="ns:Request" name="~OPERATION_NAME~Request"/>
     </message>
@@ -8,7 +9,7 @@
         <part element="ns:Response" name="~OPERATION_NAME~Response"/>
     </message>
     <message name="~OPERATION_NAME~Fault">
-        <part element="ns:Fault" name="~OPERATION_NAME~Fault"/>
+        <part element="cmm:Fault" name="Fault"/>
     </message>
     <portType name="~OPERATION_NAME~PortType">
         <operation name="~OPERATION_NAME~_~OPERATION_VERSION~">

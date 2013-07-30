@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns5="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.ziggo.nl/Integration/ESB/Generic/CSL/1.0" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType" xmlns:ns3="http://www.ziggo.nl/Integration/ESB/Generic/CMM/2.0" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx3="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~">
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns5="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/Schema" xmlns:ns6="http://www.ziggo.nl/Integration/ESB/Generic/CMM/3.0" xmlns:ns7="http://www.tibco.com/pe/EngineTypes" xmlns:ns8="http://www.ziggo.nl/Integration/ESB/Generic/CSL/3.0" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:pfx3="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~"> 
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.ziggo.nl/Integration/ESB/Generic/CMM/3.0" schemaLocation="/CMM/Resources/Schemas/cmm_3.xsd"/>
     <wsdl:import namespace="http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/1" location="/Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Resources/InternalResources/WSDL/~OPERATION_NAME~_~OPERATION_VERSION~.wsdl"/>
     <pd:name>Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Interface/~OPERATION_NAME~_~OPERATION_VERSION~/~OPERATION_NAME~_~OPERATION_VERSION~.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startType wsMsgRef="pfx3:~OPERATION_NAME~Request"/>
-    <pd:startX>133</pd:startX>
-    <pd:startY>184</pd:startY>
+    <pd:startX>87</pd:startX>
+    <pd:startY>58</pd:startY>
     <pd:returnBindings>
         <pfx3:~OPERATION_NAME~Response>
             <~OPERATION_NAME~Response>
                 <ns5:Response>
-                    <xsl:copy-of select="$FinalizeProcess/ResponseHeader/ns3:header"/>
-                    <xsl:copy-of select="$~OPERATION_NAME~_~OPERATION_VERSION~_impl/ns5:Response/ns3:resultStatus"/>
+                    <xsl:copy-of select="$FinalizeProcess/ResponseHeader/ns6:header"/>
                     <xsl:copy-of select="$~OPERATION_NAME~_~OPERATION_VERSION~_impl/ns5:Response/ns5:body"/>
                 </ns5:Response>
             </~OPERATION_NAME~Response>
@@ -19,17 +19,18 @@
     </pd:returnBindings>
     <pd:endName>End</pd:endName>
     <pd:endType wsMsgRef="pfx3:~OPERATION_NAME~Response"/>
-    <pd:endX>970</pd:endX>
-    <pd:endY>184</pd:endY>
+    <pd:endX>695</pd:endX>
+    <pd:endY>58</pd:endY>
     <pd:errorSchemas>
         <Fault wsMsgRef="pfx3:~OPERATION_NAME~Fault"/>
     </pd:errorSchemas>
     <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1363016965669</pd:targetNamespace>
     <pd:activity name="CatchTechnicalFaults">
         <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
         <pd:resourceType>ae.activities.catch</pd:resourceType>
-        <pd:x>342</pd:x>
-        <pd:y>335</pd:y>
+        <pd:x>237</pd:x>
+        <pd:y>176</pd:y>
         <pd:handler>true</pd:handler>
         <config>
             <catchAll>true</catchAll>
@@ -39,14 +40,14 @@
     <pd:activity name="~OPERATION_NAME~_~OPERATION_VERSION~_impl">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>559</pd:x>
-        <pd:y>183</pd:y>
+        <pd:x>387</pd:x>
+        <pd:y>58</pd:y>
         <config>
             <processName>/Functionalities/~OPERATION_NAME~_~OPERATION_VERSION~/Implementation/~OPERATION_NAME~_~OPERATION_VERSION~_impl/~OPERATION_NAME~_~OPERATION_VERSION~_impl.process</processName>
         </config>
         <pd:inputBindings>
             <ns5:Request>
-                <xsl:copy-of select="$InitializeProcess/EnrichedHeader/ns3:header"/>
+                <xsl:copy-of select="$InitializeProcess/EnrichedHeader/ns6:header"/>
                 <xsl:copy-of select="$Start/pfx3:~OPERATION_NAME~Request/~OPERATION_NAME~Request/ns5:Request/ns5:body"/>
             </ns5:Request>
         </pd:inputBindings>
@@ -54,28 +55,27 @@
     <pd:activity name="FinalizeProcess">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>807</pd:x>
-        <pd:y>184</pd:y>
+        <pd:x>545</pd:x>
+        <pd:y>58</pd:y>
         <config>
             <processName>/Common/Services/FinalizeProcess.process</processName>
         </config>
         <pd:inputBindings>
             <finalizeProcess_input>
-                <ns2:response>
-                    <xsl:copy-of select="$~OPERATION_NAME~_~OPERATION_VERSION~_impl/ns5:Response/ns3:header"/>
-                    <xsl:copy-of select="$~OPERATION_NAME~_~OPERATION_VERSION~_impl/ns5:Response/ns3:resultStatus"/>
-                    <ns2:body>
+                <ns8:response>
+                    <xsl:copy-of select="$~OPERATION_NAME~_~OPERATION_VERSION~_impl/ns5:Response/ns6:header"/>
+                    <ns8:body>
                         <xsl:value-of select="tib:render-xml($~OPERATION_NAME~_~OPERATION_VERSION~_impl/ns5:Response/ns5:body)"/>
-                    </ns2:body>
-                </ns2:response>
+                    </ns8:body>
+                </ns8:response>
             </finalizeProcess_input>
         </pd:inputBindings>
     </pd:activity>
     <pd:activity name="Generate Error">
         <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
         <pd:resourceType>ae.activities.throw</pd:resourceType>
-        <pd:x>799</pd:x>
-        <pd:y>335</pd:y>
+        <pd:x>550</pd:x>
+        <pd:y>176</pd:y>
         <config>
             <faultName>Fault</faultName>
         </config>
@@ -83,12 +83,7 @@
             <ns:ActivityInput>
                 <data>
                     <pfx3:~OPERATION_NAME~Fault>
-                        <~OPERATION_NAME~Fault>
-                            <ns5:Fault>
-                                <xsl:copy-of select="$HandleException/HandleCatchAll/ns2:fault/ns3:header"/>
-                                <xsl:copy-of select="$HandleException/HandleCatchAll/ns2:fault/ns3:resultStatus"/>
-                            </ns5:Fault>
-                        </~OPERATION_NAME~Fault>
+                        <xsl:copy-of select="$HandleException/Fault"/>
                     </pfx3:~OPERATION_NAME~Fault>
                 </data>
             </ns:ActivityInput>
@@ -97,56 +92,50 @@
     <pd:activity name="HandleException">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>541</pd:x>
-        <pd:y>335</pd:y>
+        <pd:x>399</pd:x>
+        <pd:y>176</pd:y>
         <config>
             <processName>/Logging/Services/HandleException.process</processName>
         </config>
         <pd:inputBindings>
-            <HandleCatchAll>
-                <ns2:header>
-                    <ns3:cmmVersion>
-                        <xsl:value-of select="$InitializeProcess/EnrichedHeader/ns3:header/ns3:cmmVersion"/>
-                    </ns3:cmmVersion>
-                    <xsl:copy-of select="$InitializeProcess/EnrichedHeader/ns3:header/ns3:external"/>
-                    <xsl:copy-of select="$InitializeProcess/EnrichedHeader/ns3:header/ns3:internal"/>
-                </ns2:header>
-                <ns2:request>
-                    <xsl:copy-of select="$Start/pfx3:~OPERATION_NAME~Request/~OPERATION_NAME~Request/ns5:Request/ns3:header"/>
-                    <ns2:body>
-                        <xsl:value-of select="tib:render-xml($Start/pfx3:~OPERATION_NAME~Request/~OPERATION_NAME~Request/ns5:Request/ns5:body)"/>
-                    </ns2:body>
-                </ns2:request>
-                <ns2:tibcoException>
-                    <xsl:value-of select="tib:render-xml($CatchTechnicalFaults/exceptiondata)"/>
-                </ns2:tibcoException>
-            </HandleCatchAll>
+            <HandleException_input>
+                <xsl:if test="string-length($InitializeProcess/EnrichedHeader/ns6:header/ns6:cmmVersion)>0">
+                    <ns8:enrichedHeader>
+                        <xsl:copy-of select="$InitializeProcess/EnrichedHeader/ns6:header/ancestor-or-self::*/namespace::node()"/>
+                        <xsl:copy-of select="$InitializeProcess/EnrichedHeader/ns6:header/@*"/>
+                        <xsl:copy-of select="$InitializeProcess/EnrichedHeader/ns6:header/node()"/>
+                    </ns8:enrichedHeader>
+                </xsl:if>
+                <ns8:errorString>
+                    <xsl:value-of select="tib:render-xml($_error/ns7:ErrorReport)"/>
+                </ns8:errorString>
+            </HandleException_input>
         </pd:inputBindings>
     </pd:activity>
     <pd:activity name="InitializeProcess">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
-        <pd:x>318</pd:x>
-        <pd:y>184</pd:y>
+        <pd:x>230</pd:x>
+        <pd:y>58</pd:y>
         <config>
             <processName>/Common/Services/InitializeProcess.process</processName>
         </config>
         <pd:inputBindings>
             <InitializeProcess>
-                <ns2:service>
-                    <ns2:name>
+                <ns8:service>
+                    <ns8:name>
                         <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/~ADAPTER_NAME~/Services/~OPERATION_NAME~_~OPERATION_VERSION~/Name"/>
-                    </ns2:name>
-                    <ns2:version>
+                    </ns8:name>
+                    <ns8:version>
                         <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/~ADAPTER_NAME~/Services/~OPERATION_NAME~_~OPERATION_VERSION~/Version"/>
-                    </ns2:version>
-                </ns2:service>
-                <ns2:request>
-                    <xsl:copy-of select="$Start/pfx3:~OPERATION_NAME~Request/~OPERATION_NAME~Request/ns5:Request/ns3:header"/>
-                    <ns2:body>
+                    </ns8:version>
+                </ns8:service>
+                <ns8:request>
+                    <xsl:copy-of select="$Start/pfx3:~OPERATION_NAME~Request/~OPERATION_NAME~Request/ns5:Request/ns6:header"/>
+                    <ns8:body>
                         <xsl:value-of select="tib:render-xml($Start/pfx3:~OPERATION_NAME~Request/~OPERATION_NAME~Request/ns5:Request/ns5:body)"/>
-                    </ns2:body>
-                </ns2:request>
+                    </ns8:body>
+                </ns8:request>
             </InitializeProcess>
         </pd:inputBindings>
     </pd:activity>
