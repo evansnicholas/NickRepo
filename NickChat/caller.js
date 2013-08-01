@@ -1,7 +1,7 @@
 $("document").ready(function() {
 
-var rtc = holla.createClient({debug:true, host: "localhost", port:8080});
-
+var rtc = holla.createClient({debug:true, host: "babble.eu01.aws.af.cm"});
+//var rtc = holla.createClient({debug:true, host: "localhost", port:1980});
 rtc.on("presence", function(user){
     if (user.online) {
       console.log(user.name + " is online.");
@@ -27,37 +27,34 @@ $("#connect").click(function() {
 		rtc.register(me);
 	
 	holla.createStream({video:false,audio:false}, function(err, stream) {	
-		
-		var firstCall = false;
-		
-		var toUser = $("#user").val();
-		var call = rtc.call(toUser);
-		
+
 	
-		$("#user").change(function() {
-		
-			toUser = $("#user").val();
-			call.end();
-			call = rtc.call(toUser);
-		
-		
+			//Send chat message
 			$("#message-send").click(function() {
+
+				var toUser = $("#user").val();
+				
+				if (toUser == ""){
+					alert("You have not entered a user.");
+				}
+				
+				var call = rtc.call(toUser);
 				var message = $("#new-message").val();
-				//console.log(message);
+				console.log(message);
 				call.chat(message);
+				call.end();
 		
 				$("#messages").append("me(to " + toUser + "): " + message + "<br>");
 		
 	
 			});
-	
-		});
-		
-		rtc.on("chat", function(chat) {
+			
+			//Receive chat message		
+			rtc.on("chat", function(chat) {
     
-			$("#messages").append(chat.from + ": " + chat.message + "<br>");
+				$("#messages").append(chat.from + ": " + chat.message + "<br>");
 	  
-		});
+			});
 	});
   });
 });
