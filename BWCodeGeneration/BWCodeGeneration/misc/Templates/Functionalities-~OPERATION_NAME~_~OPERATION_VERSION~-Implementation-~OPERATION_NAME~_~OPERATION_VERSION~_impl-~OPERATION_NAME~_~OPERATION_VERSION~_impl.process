@@ -20,7 +20,7 @@
         <Fault ref="pfx3:Fault"/>
     </pd:errorSchemas>
     <pd:processVariables/>
-    <pd:targetNamespace>http://xmlns.example.com/1363017139815</pd:targetNamespace>
+    <pd:targetNamespace>http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/implementation</pd:targetNamespace>
     <pd:transition>
         <pd:from>Start</pd:from>
         <pd:to>End</pd:to>

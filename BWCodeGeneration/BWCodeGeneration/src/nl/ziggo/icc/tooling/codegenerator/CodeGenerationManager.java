@@ -143,6 +143,11 @@ public class CodeGenerationManager {
 						
 						}
 						
+						//Insert timestamp if necessary
+						String timestampString = Long.toString(System.currentTimeMillis());
+						
+						fileContents = fileContents.replaceAll("~TIMESTAMP~", timestampString);
+						
 						//Performing parsing of template Name
 						String partialDestinationPath = "";
 						String templateName = template.getName();

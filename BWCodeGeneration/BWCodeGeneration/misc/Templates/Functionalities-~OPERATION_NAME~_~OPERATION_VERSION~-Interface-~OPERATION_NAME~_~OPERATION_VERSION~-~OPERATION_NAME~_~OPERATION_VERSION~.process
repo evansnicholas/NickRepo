@@ -25,7 +25,7 @@
         <Fault wsMsgRef="pfx3:~OPERATION_NAME~Fault"/>
     </pd:errorSchemas>
     <pd:processVariables/>
-    <pd:targetNamespace>http://xmlns.example.com/1363016965669</pd:targetNamespace>
+    <pd:targetNamespace>http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/interface</pd:targetNamespace>
     <pd:activity name="CatchTechnicalFaults">
         <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
         <pd:resourceType>ae.activities.catch</pd:resourceType>

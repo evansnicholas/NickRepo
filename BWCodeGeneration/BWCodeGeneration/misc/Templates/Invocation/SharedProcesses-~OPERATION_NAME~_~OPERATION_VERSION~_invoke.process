@@ -24,7 +24,7 @@
         <FunctionalErrorException ref="ns6:FunctionalErrorException"/>
     </pd:errorSchemas>
     <pd:processVariables/>
-    <pd:targetNamespace>http://xmlns.example.com/1337766052360</pd:targetNamespace>
+    <pd:targetNamespace>http://www.ziggo.nl/Integration/ESB/Services/~CDM_ENTITY~/~OPERATION_NAME~/~OPERATION_VERSION~/invocation</pd:targetNamespace>
     <pd:activity name="LogExternalRequest">
         <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
         <pd:resourceType>ae.process.subprocess</pd:resourceType>
