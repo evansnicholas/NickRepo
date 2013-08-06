@@ -1,13 +1,16 @@
 $("document").ready(function() {
 
-var rtc = holla.createClient({debug:true, host: "babble.eu01.aws.af.cm"});
+//var rtc = holla.createClient({debug:true, host: "babble.eu01.aws.af.cm"});
 //var rtc = holla.createClient({debug:true, host: "localhost", port:1980});
+var rtc = holla.createClient({debug:true, host: "195.35.128.146", port:8080});
+
 rtc.on("presence", function(user){
     if (user.online) {
-      console.log(user.name + " is online.");
+      $("#online-users").append(user.name + " is online. <br>");
     } else {
-      console.log(user.name + " is offline.");
+      $("#online-users").append(user.name + " is offline. <br>");
     }
+	
   });
   
 
@@ -15,7 +18,7 @@ $("#connect").click(function() {
 
  var me = $("#me").val();
   
- $("#messages").append("You are connected as: " + me + "<br>");
+ $("#status").append("You are connected as: " + me + "<br>");
   
 	/*rtc.register(me, function(worked) {
 		holla.createStream({video:false,audio:false}, function(err, stream) {

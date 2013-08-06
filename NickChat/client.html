@@ -4,17 +4,16 @@
 	<script src="http://code.jquery.com/jquery.min.js"></script>
 	<script src="holla.js"></script>
 	<script src="caller.js"></script> 
-
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
 <h1> Nick Chat App </h1>
 
-Connect as: <input type="text" id="me" value=""/> <button type="button" id="connect" > Connect </button> <br>
+<div class="left">
+Connect as: <input type="text" id="me" value="" /> <button type="button" id="connect" > Connect </button> <br>
 Send to: <input type="text" id="user" value=""/>
-
-
 
 <br>
 
@@ -23,5 +22,23 @@ Send to: <input type="text" id="user" value=""/>
 <button type="button" id="message-send" > Send </button>
 
 <p id="messages" > </p>
+
+</div>
+
+<div class="right">
+
+<p id="status" ></p>
+<p id="online-users"> Connected users: <br> </p>
+
+</div>
+
+
+
+
+
+
+
+
+
 
 </body>
