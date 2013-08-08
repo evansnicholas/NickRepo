@@ -5,6 +5,7 @@ import javax.jms.JMSException;
 import javax.jms.JMSSecurityException;
 import javax.jms.Message;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.jms.TopicConnection;
 import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
@@ -26,18 +27,18 @@ public class TopicListener {
 		try{	
 			
 			TopicConnection topicConnection = topicConnectionFactory.createTopicConnection("admin", "admin");
-			
-			TibjmsTopic allQueuesMonitorTopic = new TibjmsTopic("$sys.monitor.q.*.icc.*.*.*.queue");
-			
+			topicConnection.start();
+			TibjmsTopic allQueuesMonitorTopic = new TibjmsTopic("$sys.monitor.Q.s.icc.adpebs.ebsgetproducts.1.queue");	
 			TopicSession topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-			
 			TopicSubscriber topicSubscriber = topicSession.createSubscriber(allQueuesMonitorTopic);
 			
 			while(true){
 				
-				Message messsage = topicSubscriber.receive();
+				Message message = topicSubscriber.receive();
 				
-				System.out.print("Message number "+ ++messageCount);
+				System.out.print("Message number "+ ++messageCount + " ");
+				
+				System.out.println(message.getJMSType());
 				
 			}
 			
