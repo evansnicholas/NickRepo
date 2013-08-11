@@ -65,6 +65,7 @@ public class DialDemo2 extends JFrame
       localDialPlot.setView(0.0D, 0.0D, 1.0D, 1.0D);
       localDialPlot.setDataset(0, this.dataset1);
       localDialPlot.setDataset(1, this.dataset2);
+     
       
        StandardDialFrame localStandardDialFrame = new StandardDialFrame();
       localStandardDialFrame.setBackgroundPaint(Color.lightGray);
